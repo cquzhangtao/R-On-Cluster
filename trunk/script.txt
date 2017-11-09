@@ -1,0 +1,68 @@
+#MLP neural network
+
+#Data import
+Data <- read.table("d:/test.txt", header = TRUE, sep = "\t", comment.char = "")
+DS <- Data$DS
+
+#Loop for Traindata
+timeHorizon <- 5
+WIP_Input <- matrix(0,(ncol(Data)-2)-(timeHorizon-1),timeHorizon*nrow(Data)) 
+WIP_Output <-matrix(0,(ncol(Data)-2)-(timeHorizon-1),nrow(Data))
+for (DsIteration in 0:(nrow(Data)-1)){
+  
+  l = 1; 
+  iteration = 0;
+  for (i in 1:(timeHorizon*((ncol(Data)-2)-(timeHorizon-1))))
+  {
+    if ((i-1)%%(timeHorizon)==0 ){
+      iteration = iteration + 1;
+      l =1;
+    }
+    
+    WIP_Input[iteration, l+DsIteration*timeHorizon] <- Data[DsIteration+1,i-timeHorizon*(iteration-1)+(iteration-1)+1]
+    WIP_Output[iteration, DsIteration+1]  <- Data[DsIteration+1,i-timeHorizon*(iteration-1)+(iteration-1)+2]
+    l = l+1;
+  }
+  
+}
+#Input and Output in one data frame
+Data <- cbind(WIP_Input,WIP_Output)
+
+
+library(RSNNS)
+
+#Colums of Input and Output
+DataValues <- Data[,1:15]
+DataTargets <- Data[,16: 18]
+
+#Split Data in Training and Test 
+Data <- splitForTrainingAndTest(DataValues, DataTargets, ratio= 0.2)
+#normalize Data
+Data <- normTrainingAndTestSet(Data)
+
+#generate a mlp net
+model <- mlp(Data$inputsTrain, Data$targetsTrain, size=c(1500,800),initFunc = "Random_Weights _Perc",hiddenActFunc = "Act_TanH _Xdiv2", 
+             maxit= 10,learnFunc="Rprop",linOut=TRUE, inputsTest = Data$inputsTest, targetsTest = Data$targetsTest)
+
+#summary(model)
+#Plot iterativ error of the model
+plotIterativeError (model)
+
+#Predict new Data with the trained mlp Modell
+predictions  <- predict(model,Data$inputsTest)
+#Plot test against predictet Data
+plot (predictions,Data$targetsTest)
+
+
+#MSE
+MSE.mlp <- (sum((Data$targetsTest - predictions)^2)/nrow(Data$targetsTest))
+#MSE wegspeichern
+write.table(MSE.mlp, "d:/mse.txt") 
+
+#Quadratischer Fehler berechnen und Mittelwert über DS
+quad.fehler <- (Data$targetsTest - predictions)^2
+mean.quad.error <- colMeans(quad.fehler)
+#Mittelwerte der quadr. Fehler je DS und DsName wegspeichern
+DS.mean <- cbind.data.frame(DS,mean.quad.error)
+write.table(DS.mean, "d:/mean.txt")
+
