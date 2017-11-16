@@ -2,7 +2,21 @@
 <classpath>
 	<classpathentry kind="src" path="src"/>
 	<classpathentry kind="con" path="org.eclipse.jdt.launching.JRE_CONTAINER"/>
-	<classpathentry kind="lib" path="C:/Users/xiesh/Desktop/REngine.jar"/>
-	<classpathentry kind="lib" path="C:/Users/xiesh/Desktop/Rserve.jar"/>
+	<classpathentry kind="lib" path="OsramRClient_lib/REngine.jar">
+		<attributes>
+			<attribute name="org.eclipse.jdt.launching.CLASSPATH_ATTR_LIBRARY_PATH_ENTRY" value="C:/Program Files/R/R-3.4.2/bin/x64"/>
+		</attributes>
+	</classpathentry>
+	<classpathentry kind="lib" path="OsramRClient_lib/Rserve.jar"/>
+	<classpathentry kind="lib" path="D:/OSRAMRClient/rJava_0.9-9/rJava/jri/JRI.jar">
+		<attributes>
+			<attribute name="org.eclipse.jdt.launching.CLASSPATH_ATTR_LIBRARY_PATH_ENTRY" value="C:/Users/shufang xie/Documents/R/win-library/3.4/rJava/jri/x64"/>
+		</attributes>
+	</classpathentry>
+	<classpathentry kind="lib" path="D:/OSRAMRClient/rJava_0.9-9/rJava/jri/JRIEngine.jar">
+		<attributes>
+			<attribute name="org.eclipse.jdt.launching.CLASSPATH_ATTR_LIBRARY_PATH_ENTRY" value="C:/Users/shufang xie/Documents/R/win-library/3.4/rJava/libs/x64"/>
+		</attributes>
+	</classpathentry>
 	<classpathentry kind="output" path="bin"/>
 </classpath>
