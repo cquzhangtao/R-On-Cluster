@@ -2,7 +2,7 @@
 <classpath>
 	<classpathentry kind="src" path="src"/>
 	<classpathentry kind="con" path="org.eclipse.jdt.launching.JRE_CONTAINER"/>
-	<classpathentry kind="lib" path="C:/Users/shufang xie/Documents/R/win-library/3.4/Rserve/java/REngine.jar"/>
-	<classpathentry kind="lib" path="C:/Users/shufang xie/Documents/R/win-library/3.4/Rserve/java/Rserve.jar"/>
+	<classpathentry kind="lib" path="C:/Users/xiesh/Desktop/REngine.jar"/>
+	<classpathentry kind="lib" path="C:/Users/xiesh/Desktop/Rserve.jar"/>
 	<classpathentry kind="output" path="bin"/>
 </classpath>

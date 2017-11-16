@@ -22,8 +22,13 @@ public class Run {
         	String path=Run.class.getProtectionDomain().getCodeSource().getLocation().toURI().getPath();
         	
         	if(path.contains("jar")){
-        		path=path.substring(1, path.lastIndexOf("/")).replace("/", File.separator);
-        	}else{
+        		if(path.contains(":/")){
+        			path=path.substring(1, path.lastIndexOf("/")).replace("/", File.separator);
+        		}else{
+        			path=path.substring(0, path.lastIndexOf("/")).replace("/", File.separator);
+        		}
+        	} 
+        	else{
         		path=path.substring(1, path.lastIndexOf("/bin/")).replace("/", File.separator);
         	}
         	System.out.println(path);
@@ -43,7 +48,7 @@ public class Run {
         } catch (RserveException e) {
            // e.printStackTrace();
         	error("Two reasons lead to this error:",
-        			" 1)Rserve server is not started. Please start Rserve server in your R console and run again."
+        			" 1)Rserve server is not started. Please install the server if necessary and start it in your R console and run this again."
         	 		+ "-- install.packages(\"Rserve\")-> library(Rserve)-> Rserve();", 
         	 		" 2)Template file has syntax errors. Please check the file scripttemp.txt.");
 
@@ -88,6 +93,7 @@ public class Run {
 				}
 				template=template.replace(paraName, paraValue);
 			}
+			new File(path+File.separator+"script.txt").delete();
 			try(  PrintWriter out = new PrintWriter( path+File.separator+"script.txt" )  ){
 			    out.println( template );
 			}
@@ -98,8 +104,8 @@ public class Run {
 			System.out.println("Script is generated.");
 			
 		} catch (IOException e) {
-			//e.printStackTrace();
-			error("Config file or template file is borken.");
+			e.printStackTrace();
+			error("Config file or template file is broken.");
 		}
 	}
 	
