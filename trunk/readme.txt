@@ -11,6 +11,9 @@ $apt-get install default-jdk
 
 $apt-get install r-base
 
+//If you install R before JDK, please 
+$R CMD javareconf -e
+
 3) Run R
 
 $R
