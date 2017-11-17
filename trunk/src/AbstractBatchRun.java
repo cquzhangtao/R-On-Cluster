@@ -35,7 +35,7 @@ public abstract class AbstractBatchRun {
         		path=path.substring(1, path.lastIndexOf("/bin/")).replace("/", File.separator);
         	}
         	System.out.println(path);
-        	appPath=path;
+        	setAppPath(path);
 
            // runScenarios();
         }
@@ -51,7 +51,7 @@ public abstract class AbstractBatchRun {
 	
 	public void runScenarios(){
 		List<List<String>> scenarios=readScenarios();
-		String scriptPath=appPath+File.separator+"script.txt";
+		String scriptPath=getAppPath()+File.separator+"script.txt";
 		for(int i=1;i<scenarios.size();i++){
 			List<String> scenario=scenarios.get(i);
 			if(isScenarioDisable(scenarios.get(0),scenario)){
@@ -70,7 +70,7 @@ public abstract class AbstractBatchRun {
 	private  void agregateResults(List<List<String>> scenarios){
 		PrintWriter writer=null;
 		try {
-			writer = new PrintWriter( appPath+File.separator+"result.txt") ;
+			writer = new PrintWriter( getAppPath()+File.separator+"result.txt") ;
 		} catch (FileNotFoundException e1) {
 			//e1.printStackTrace();
 			error("Result file error");
@@ -117,7 +117,7 @@ public abstract class AbstractBatchRun {
 		try{
 		 	System.out.println("Reading scenarios...");
 		 	List<List<String>> scenarios=new ArrayList<List<String>>();
-			List<String> configs=Files.readAllLines(Paths.get(appPath+File.separator+"scenarios.txt"));
+			List<String> configs=Files.readAllLines(Paths.get(getAppPath()+File.separator+"scenarios.txt"));
 			for(String config:configs){
 				if(config.isEmpty()){
 					continue;
@@ -225,5 +225,13 @@ public abstract class AbstractBatchRun {
 	}
 
 	protected abstract void close() ;
+
+	public String getAppPath() {
+		return appPath;
+	}
+
+	public void setAppPath(String appPath) {
+		this.appPath = appPath;
+	}
 
 }
