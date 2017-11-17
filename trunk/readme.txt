@@ -67,7 +67,8 @@ In the template file, please use "[[name of a parameter]]" to replace the values
 In the scenario file, please add names of all parameters to the first line and separate with a tab. Please also add the following headers, Include, Name, and Template. Column "Template" refers to the location of the templates.
 Please add new lines to define scenarios. The values are also separated with a tab. Empty lines are allowed.
 
-!!Please keep the names in the template file and the scenario file the same. The order of the headers does not matter. The names of parameters are case insensitive.
+!!!!The name of the scenario file is fixed to "scenarios.txt" and please put it under the tool folder.
+!!!!Please keep the names of parameters in the template file and the scenario file the same.The names of parameters are case insensitive. The order of the headers does not matter. 
 
 C. Library
 
