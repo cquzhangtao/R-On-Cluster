@@ -1,17 +1,31 @@
 
 A. Installation 
 
-Please follow steps below to setup this tool on Debian.
+In windows, please follow steps below to setup this tool.
 
-1) Install Java Development Toolkit (JDK)
+1) Install Java if not installed yet
+
+2) Install R if not installed
+
+3) Install rJava in R 
+install.packages("rJava")
+
+4) Change the paths of R and rJava in run.bat
+
+5) Click run.bat to run the tool.
+
+
+In Debian, please follow steps below to setup this tool .
+
+1) Install Java Development Toolkit (JDK) if not installed yet
 
 $apt-get install default-jdk
 
-2) Install R
+2) Install R if not installed 
 
 $apt-get install r-base
 
-//If you install R before JDK, please 
+//If you install R before JDK, please reconfig java for R
 $R CMD javareconf -e
 
 3) Run R
