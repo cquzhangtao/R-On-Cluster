@@ -68,7 +68,7 @@ In the scenario file, please add names of all parameters to the first line and s
 Please add new lines to define scenarios. The values are also separated with a tab. Empty lines are allowed.
 
 !!!!The name of the scenario file is fixed to "scenarios.txt" and please put it under the tool folder.
-!!!!Please keep the names of parameters in the template file and the scenario file the same.The names of parameters are case insensitive. The order of the headers does not matter. 
+!!!!Please keep the names of parameters in the template file and the scenarios.txt file the same.The names of parameters are case insensitive. The order of the headers does not matter. 
 
 C. Library
 
