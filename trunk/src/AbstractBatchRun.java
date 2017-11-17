@@ -18,7 +18,7 @@ public abstract class AbstractBatchRun {
 
 	public AbstractBatchRun() {
 		System.out.println();
-		System.out.println("OSRAM R Client @Unibw Munich 11-09-2017");
+		System.out.println("R Experiment Tool @Unibw Munich 11-09-2017");
 		 
         try {
         	
