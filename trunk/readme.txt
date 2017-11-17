@@ -1,4 +1,6 @@
 
+A. Installation 
+
 Please follow steps below to setup this tool on Debian.
 
 1) Install Java Development Toolkit (JDK)
@@ -35,5 +37,15 @@ $ java -jar /some/where/you/copy/to/OsramRClient.jar
 
 
 8) Done
+
+9) If you changed the configuration and want to run again, please just input command,
+
+$ java -jar /some/where/you/copy/to/OsramRClient.jar
+
+
+B. Configuration
+
+Please change the configuration in scenarios.txt. In this file, column "Template" refers to the location of the templates.
+!!Please don't change names of the headers. Anyway, you can change the order of the columns.
 
 
