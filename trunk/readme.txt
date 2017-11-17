@@ -65,4 +65,7 @@ B. Configuration
 Please change the configuration in scenarios.txt. In this file, column "Template" refers to the location of the templates.
 !!Please don't change names of the headers. Anyway, you can change the order of the columns.
 
+C. Library
 
+If you want to use other libraries, please download them and put them into the lib folder in the tool.
+For windows, download zip file; For Linux, download .tar.gz file.
