@@ -4,7 +4,7 @@
 // If you want to change the script and add new parameters, please be sure that the names in both the template file and here are the same (case sensitive).
 
 
-_Para_Location_of_Dataset::=d:/test.txt
+_Para_Location_of_Dataset::=d:/testdataset.txt
 _Para_Name_Of_The_First_Column::=DS             // if the names of stations are always in the first column, this parameter is unnecessary.
 _Para_Time_Horizaon::=5
 //_Para_Index_Of_The_Last_Input_Column::=1

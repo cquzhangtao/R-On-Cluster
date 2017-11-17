@@ -4,9 +4,9 @@
 
 #Data import
 
-Data <- read.table("d:/testdataset.txt", header = TRUE, sep = "\t", comment.char = "")
+Data <- read.table("[[DataSetLocation]]", header = TRUE, sep = "\t", comment.char = "")
 
-DS <- Data$DS
+DS <- Data$[[FirstColumn]]
 
  
 
@@ -30,7 +30,7 @@ varCoWIP <- sdtWIP/meanWIP[,2]
 
 #Loop for Traindata
 
-timeHorizon <- 5
+timeHorizon <- [[TimeHorizon]]
 
 WIP_Input <- matrix(0,(ncol(Data)-2)-(timeHorizon-1),timeHorizon*nrow(Data)) 
 
@@ -84,15 +84,15 @@ library(RSNNS)
 
 #Colums of Input and Output
 
-DataValues <- Data_NN[,1:15]
+DataValues <- Data_NN[,1:[[NumberOfInputs]]]
 
-DataTargets <- Data_NN[,(15+1):(15+3)]
+DataTargets <- Data_NN[,([[NumberOfInputs]]+1):([[NumberOfInputs]]+[[NumberOfOutputs]])]
 
  
 
 #Split Data in Training and Test 
 
-Data_NN <- splitForTrainingAndTest(DataValues, DataTargets, ratio=0.2)
+Data_NN <- splitForTrainingAndTest(DataValues, DataTargets, ratio=[[PercentageOfTestData]])
 
 #normalize Data
 
@@ -102,9 +102,9 @@ Data_NN <- normTrainingAndTestSet(Data_NN)
 
 #generate a mlp net
 
-model <- mlp(Data_NN$inputsTrain, Data_NN$targetsTrain, size=c(15,20,30),
+model <- mlp(Data_NN$inputsTrain, Data_NN$targetsTrain, size=c([[NeuronsPerLayer]]),
 
-             maxit=10,learnFunc="Rprop",linOut=TRUE, inputsTest=Data_NN$inputsTest, targetsTest=Data_NN$targetsTest)
+             maxit=[[MaxIt]],learnFunc="[[LearningFunc]]",linOut=TRUE, inputsTest=Data_NN$inputsTest, targetsTest=Data_NN$targetsTest)
 
  
 
@@ -146,7 +146,7 @@ errorWafer <- sqrt(mean.quad.error)
 
 MSE <- mean(mean.quad.error)
 
-write.table(MSE, "d://MSE.txt") 
+write.table(MSE, "[[ResultLocation]]/MSE.txt") 
 
  
 
@@ -154,5 +154,4 @@ write.table(MSE, "d://MSE.txt")
 
 DS.mean <- cbind.data.frame(DS,mean.quad.error, errorWafer, meanWIP, sdtWIP,varCoWIP )
 
-write.table(DS.mean, "d://DS.mean.txt") 
-
+write.table(DS.mean, "[[ResultLocation]]/DS.mean.txt") 
