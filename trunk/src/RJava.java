@@ -39,7 +39,7 @@ public class RJava {
        re =engine.eval("install.packages('RSNNS')");
        re =engine.eval("installed.packages()");
        re =engine.eval(".libPaths()");
-      re =engine.eval("library('Rcpp')");
+     // re =engine.eval("library('Rcpp')");
       re =engine.eval("library('RSNNS')");
        re =engine.eval("if(!'RSNNS' %in% (.packages())) library(RSNNS)");
        re =engine.eval(".packages()");

@@ -13,7 +13,7 @@ import java.util.regex.Pattern;
 import org.rosuda.REngine.Rserve.RConnection;
 import org.rosuda.REngine.Rserve.RserveException;
 
-public class Run2 {
+public class BatchRun {
 
 	public static void main(String[] args) {
 		System.out.println();
@@ -23,7 +23,7 @@ public class Run2 {
 		 
         try {
         	
-        	String path=Run2.class.getProtectionDomain().getCodeSource().getLocation().toURI().getPath();
+        	String path=BatchRun.class.getProtectionDomain().getCodeSource().getLocation().toURI().getPath();
         	
         	if(path.contains("jar")){
         		if(path.contains(":/")){
