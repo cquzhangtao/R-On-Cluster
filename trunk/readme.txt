@@ -62,10 +62,15 @@ $ java -jar /some/where/you/copy/to/OsramRClient.jar
 
 B. Configuration
 
-Please change the configuration in scenarios.txt. In this file, column "Template" refers to the location of the templates.
-!!Please don't change names of the headers. Anyway, you can change the order of the columns.
+Two files are required, Template file and scenario file.
+In the template file, please use "[[name of a parameter]]" to replace the values you want to config later. There is no requirement on the name and location of template files.
+In the scenario file, please add names of all parameters to the first line and separate with a tab. Please also add the following headers, Include, Name, and Template. Column "Template" refers to the location of the templates.
+Please add new lines to define scenarios. The values are also separated with a tab. Empty lines are allowed.
+
+!!Please keep the names in the template file and the scenario file the same. The order of the headers does not matter. The names of parameters are case insensitive.
 
 C. Library
 
 If you want to use other libraries, please download them and put them into the lib folder in the tool.
 For windows, download zip file; For Linux, download .tar.gz file.
+
