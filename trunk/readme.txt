@@ -10,7 +10,7 @@ In windows, please follow steps below to setup this tool.
 3) Install rJava in R 
 install.packages("rJava")
 
-4) Change the paths of R and rJava in run.bat
+4) Change the paths of Java, R and rJava in run.bat
 
 5) Click run.bat to run the tool.
 
