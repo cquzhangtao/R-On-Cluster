@@ -3,6 +3,7 @@ import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.io.PrintWriter;
 import java.net.URISyntaxException;
+import java.nio.charset.Charset;
 import java.nio.file.Files;
 import java.nio.file.Paths;
 import java.util.ArrayList;
@@ -113,10 +114,24 @@ public abstract class AbstractBatchRun {
 	public abstract void run(String loadScript) ;
 
 	private List<List<String>> readScenarios(){
-		try{
+		//try{
 		 	System.out.println("Reading scenarios...");
 		 	List<List<String>> scenarios=new ArrayList<List<String>>();
-			List<String> configs=Files.readAllLines(Paths.get(getAppPath()+File.separator+"scenarios.txt"));
+			List<String> configs=null;
+			try{
+				configs=Files.readAllLines(Paths.get(getAppPath()+File.separator+"scenarios.txt"));
+			}catch(IOException e){
+				try{
+					Charset charset = Charset.forName("Cp1252");
+					configs=Files.readAllLines(Paths.get(getAppPath()+File.separator+"scenarios.txt"),charset);
+				}catch(IOException ie){
+					e.printStackTrace();
+					error("Config file or template file is broken.");
+				}
+			}
+			if(configs==null){
+				return null;
+			}
 			for(String config:configs){
 				if(config.isEmpty()){
 					continue;
@@ -124,11 +139,11 @@ public abstract class AbstractBatchRun {
 				scenarios.add(Arrays.asList(config.split("\t")));
 			}
 			return scenarios;
-		} catch (IOException e) {
-			e.printStackTrace();
-			error("Config file or template file is broken.");
-		}
-		return null;
+//		} catch (IOException e) {
+//			e.printStackTrace();
+//			error("Config file or template file is broken.");
+//		}
+//		return null;
 	}
 	
 
@@ -170,6 +185,9 @@ public abstract class AbstractBatchRun {
 				String regex="(?i)"+Pattern.quote("[["+names.get(i).trim()+"]]");
 				template=template.replaceAll(regex, values.get(i));
 			}
+			String regex="(?i)"+Pattern.quote("[[ScenarioName]]");
+			template=template.replaceAll(regex, scenarioName);
+			
 			new File(scriptPath).delete();
 			 PrintWriter out = null;
 			try{  out = new PrintWriter( scriptPath); 
@@ -208,7 +226,7 @@ public abstract class AbstractBatchRun {
 		} catch (InterruptedException e) {
 			//e.printStackTrace();
 		}
-		System.out.println("The client is terminated.");
+		System.out.println("The tool is terminated.");
 		exit();
 	}
 	
@@ -219,7 +237,7 @@ public abstract class AbstractBatchRun {
 				System.out.println("Please press any key to quit ......");
 				System.in.read();
 			}else{
-				System.out.println("The tool terminated!");
+				//System.out.println("The tool terminated!");
 			}
 		} catch (IOException e1) {
 			e1.printStackTrace();

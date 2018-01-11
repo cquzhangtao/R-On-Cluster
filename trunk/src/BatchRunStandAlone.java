@@ -63,6 +63,10 @@ public class BatchRunStandAlone extends AbstractBatchRun {
 			error("Required librares are not found.");
 		}
 		engine.eval("Sys.setenv(\"R_LIBS_USER\"=\""+installedLibFolder+"\")");
+		
+		//REXP ret =engine.eval("installed.packages()[,c(1,3)]");
+		//System.out.println(ret.asStringArray().toString());
+		
 		File[]files=new File(libFolder).listFiles();
 		if(files==null&&files.length==0){
 			error("Required librares are not found.");
@@ -84,8 +88,8 @@ public class BatchRunStandAlone extends AbstractBatchRun {
 				boolean installed=false;
 				if(name.lastIndexOf("_")>-1&&name.lastIndexOf("/")+1<name.length()){
 					String shortName=name.substring(name.lastIndexOf("/")+1,name.lastIndexOf("_"));
-					System.out.println(shortName);
-					REXP re =engine.eval("'"+shortName+"' %in% installed.packages()");
+					System.out.println("Loading libaray "+shortName+" ...");
+					REXP re =engine.eval("'"+shortName+"' %in% installed.packages()[,c(1,3)]");
 					if(re!=null && re.asBool()!=null &&re.asBool().isTRUE()){
 						installed=true;
 						continue;
