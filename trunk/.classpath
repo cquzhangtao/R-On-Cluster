@@ -2,9 +2,9 @@
 <classpath>
 	<classpathentry kind="src" path="src"/>
 	<classpathentry kind="con" path="org.eclipse.jdt.launching.JRE_CONTAINER"/>
+	<classpathentry kind="lib" path="OsramRClient_lib/JRI.jar"/>
+	<classpathentry kind="lib" path="OsramRClient_lib/JRIEngine.jar"/>
 	<classpathentry kind="lib" path="OsramRClient_lib/REngine.jar"/>
 	<classpathentry kind="lib" path="OsramRClient_lib/Rserve.jar"/>
-	<classpathentry kind="lib" path="C:/user/xie/rJava/jri/JRI.jar"/>
-	<classpathentry kind="lib" path="C:/user/xie/rJava/jri/JRIEngine.jar"/>
 	<classpathentry kind="output" path="bin"/>
 </classpath>
