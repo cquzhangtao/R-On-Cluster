@@ -10,8 +10,7 @@ import java.util.Arrays;
 import java.util.List;
 import java.util.regex.Pattern;
 
-import org.rosuda.REngine.Rserve.RConnection;
-import org.rosuda.REngine.Rserve.RserveException;
+
 
 public abstract class AbstractBatchRun {
 	private String appPath;
@@ -216,8 +215,12 @@ public abstract class AbstractBatchRun {
 	void exit(){
 		close();
 		try {
-			System.out.println("Please press any key to quit ......");
-			System.in.read();
+			if(OSValidator.isWindows()){
+				System.out.println("Please press any key to quit ......");
+				System.in.read();
+			}else{
+				System.out.println("The tool terminated!");
+			}
 		} catch (IOException e1) {
 			e1.printStackTrace();
 		}
