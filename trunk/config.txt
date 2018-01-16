@@ -1,23 +1,8 @@
-// Please start the name of parameters with "_Para_". This will be used to check if all parameters are defined here.
 // Between a name and its value, please insert "::=" and make sure that no white spaces among these three letters.
 // Empty lines are allowed and you can also use two slashes to comment or disable configurations.
-// If you want to change the script and add new parameters, please be sure that the names in both the template file and here are the same (case sensitive).
 
+// location of R.exe
+R_PATH::=C:\Program Files\R\R-3.4.2\bin //Do not forget bin
 
-_Para_Location_of_Dataset::=d:/testdataset.txt
-_Para_Name_Of_The_First_Column::=DS             // if the names of stations are always in the first column, this parameter is unnecessary.
-_Para_Time_Horizaon::=5
-//_Para_Index_Of_The_Last_Input_Column::=1
-_Para_Index_Of_The_Last_Input_Column::=15		// this value = _Para_Time_Horizaon * number of dispatch stations, i.e number of rows in the dataset, so please change the script and remove it.
-_Para_Index_Of_The_First_Output_Column::=16     // if the output data starts always after the input data, this is also not necessary
-_Para_Index_Of_The_Last_Output_Column::=18      // this value = _Para_Time_Horizaon * number of dispatch stations + number of dispatch stations, so please change the script and remove it.
-
-_Para_Percentage_Of_The_Test_Data::=0.2
-_Para_Number_Of_Neurons_In_Each_Layer::=1500,800          //for more layers, please add more numbers and separate with a comma
-_Para_Weight_Init_Function::=Random_Weights _Perc
-_Para_Activation_Function_Of_Hidden_Nuerons::=Act_TanH _Xdiv2
-_Para_Number_Of_Max_Iterations::=10
-_Para_Learning_Function::=Rprop
-_Para_Location_Of_Result_MSE::=d:/mse.txt
-_Para_Location_Of_Result_Mean::=d:/mean.txt
-
+// Rserve installation folder 
+RServe_Path::=C:\Users\shufang xie\Documents\R\win-library\3.4            

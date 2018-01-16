@@ -75,3 +75,18 @@ C. Library
 If you want to use other libraries, please download them and put them into the lib folder in the tool.
 For windows, download zip file; For Linux, download .tar.gz file.
 
+D. Rserve installation
+
+Manually installation
+1) download Rserve package
+2) in R run install.packages("package location",,repos=NULL, type="source")
+//if this error occurs "'configure' exists but is not executable -- see the 'R Installation and Administration Manual'"
+// please run $mkdir new_folder $export TMPDIR= path_of_new_folder first
+
+Run Rserve in an user path
+1) .libPaths("Rserve_installed_path")
+2) library("Rserve")
+3) Rserve()
+
+
+
