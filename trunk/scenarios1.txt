@@ -1,5 +1,0 @@
-Include	Name	DataSetLocation	FirstColumn	Timehorizon	NumberOfInputs	NumberOfOutputs	PercentageOfTestData	NeuronsPerLayer	WeightInit	ActFuncHidden	MaxIt	LearningFunc	ResultLocation	Template
-x	Scenario_1	d:/testdataset.txt	DS	5	15	3	0.2	15,20,30	Random_Weights_Perc	Act_TanH	10	Rprop	d:/	D:/tao/OSRAMRClient/scripttemp2.txt
-x	Scenario_2	d:/testdataset.txt	DS	5	15	3	0.2	15,20,30	Random_Weights_Perc	Act_TanH	10	Rprop	d:/	D:/tao/OSRAMRClient/scripttemp2.txt
-x	Scenario_3	d:/testdataset.txt	DS	5	15	3	0.2	15,20,30	Random_Weights_Perc	Act_TanH	10	Rprop	d:/	D:/tao/OSRAMRClient/scripttemp2.txt
-x	Scenario_4	d:/testdataset.txt	DS	5	15	3	0.2	15,20,30	Random_Weights_Perc	Act_TanH	10	Rprop	d:/	D:/tao/OSRAMRClient/scripttemp2.txt

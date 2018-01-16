@@ -1,4 +1,0 @@
-.libPaths("E:/projects/Simulation/OSRAMRClient/installed libs")
-fileConn<-file("d:/20180111/output/Scenario2.txt")
-writeLines(c("Scenario2","World"), fileConn)
-close(fileConn)
