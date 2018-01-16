@@ -30,7 +30,7 @@ public class ParallelBatchRunOnServer extends BatchRunOnServer{
 		info("Starting to run scenarios");
 		List<List<String>> scenarios=readScenarios();
 		
-		String scriptTempPath=getAppPath()+File.separator+"generated scripts";
+		String scriptTempPath=getAppPath()+File.separator+"generated_scripts";
 		new File(scriptTempPath).mkdirs();
 		
 		for(int i=1;i<scenarios.size();i++){

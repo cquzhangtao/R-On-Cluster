@@ -1,4 +1,4 @@
-library(RSNNS)
+library(rnn)
 fileConn<-file("[[OutputLocation]]/[[name]].txt")
 writeLines(c("[[name]]","World"), fileConn)
 close(fileConn)
