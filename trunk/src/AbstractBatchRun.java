@@ -28,7 +28,7 @@ public abstract class AbstractBatchRun {
 			String path = AbstractBatchRun.class.getProtectionDomain()
 					.getCodeSource().getLocation().toURI().getPath();
 
-			if (path.contains("jar")) {
+			if (path.contains(".jar")) {
 				if (path.contains(":/")) {
 					path = path.substring(1, path.lastIndexOf("/")).replace(
 							"/", File.separator);
@@ -39,7 +39,7 @@ public abstract class AbstractBatchRun {
 			} else {
 				path = path.substring(1, path.lastIndexOf("/bin/")).replace(
 						"/", File.separator);
-				if (!path.startsWith("/")) {
+				if (!path.contains(":\\")) {
 					path = "/" + path;
 				}
 			}
