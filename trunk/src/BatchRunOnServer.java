@@ -82,13 +82,13 @@ public class BatchRunOnServer extends AbstractBatchRun {
 	public void start() {
 
 		try {
-			if (OSValidator.isWindows()) {
+			//if (OSValidator.isWindows()) {
 				info("Connectting to Rserve server at port " + port + "...");
 				connection = new RConnection("localhost", port);
-			} else {
-				info("Connectting to Rserve server...");
-				connection = new RConnection();
-			}
+			//} else {
+			//	info("Connectting to Rserve server...");
+			//	connection = new RConnection();
+			//}
 		} catch (RserveException e) {
 			// e.printStackTrace();
 			error("Rserve server is not started. Please install the server if necessary and start it in your R console and run this again."

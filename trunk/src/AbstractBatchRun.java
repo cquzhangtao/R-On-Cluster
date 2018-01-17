@@ -28,7 +28,7 @@ public abstract class AbstractBatchRun {
 			String path = AbstractBatchRun.class.getProtectionDomain()
 					.getCodeSource().getLocation().toURI().getPath();
 
-			if (path.contains(".jar")) {
+			if (path.contains("jar")) {
 				if (path.contains(":/")) {
 					path = path.substring(1, path.lastIndexOf("/")).replace(
 							"/", File.separator);
@@ -39,7 +39,7 @@ public abstract class AbstractBatchRun {
 			} else {
 				path = path.substring(1, path.lastIndexOf("/bin/")).replace(
 						"/", File.separator);
-				if (!path.contains(":\\")) {
+				if (!path.startsWith("/")) {
 					path = "/" + path;
 				}
 			}
@@ -407,10 +407,10 @@ public abstract class AbstractBatchRun {
 						try {
 							info(str);
 							Process p = Runtime.getRuntime().exec(str);
-							//StreamHog errorHog = new
-							// StreamHog(p.getErrorStream(), false);
-							// StreamHog outputHog = new
-							// StreamHog(p.getInputStream(), false);
+							StreamHog errorHog = new
+							 StreamHog(p.getErrorStream(), false);
+							 StreamHog outputHog = new
+							StreamHog(p.getInputStream(), false);
 							p.waitFor();
 						} catch (IOException e) {
 							// TODO Auto-generated catch block

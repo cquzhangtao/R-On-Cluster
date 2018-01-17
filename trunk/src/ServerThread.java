@@ -7,9 +7,9 @@ public class ServerThread extends Thread{
 
 	public ServerThread(String rPath,String rServePath){
 		port++;
-		if(OSValidator.isWindows()){
+		//if(OSValidator.isWindows()){
 			startServer(rPath,rServePath,port);
-		}
+		//}
 		server=new BatchRunOnServer(port);
 		server.start();
 	}

@@ -65,8 +65,12 @@ public class StartRserve {
 			} else /* unix startup */
 				p = Runtime.getRuntime().exec(new String[] {
 							      "/bin/sh", "-c",
-							      "echo 'Sys.setenv(\"R_LIBS_USER\"=\""+rServePath+"\");library(Rserve);Rserve("+(debug?"TRUE":"FALSE")+",args=\""+rsrvargs+"\")'|"+cmd+" "+rargs
+							      "echo 'Sys.setenv(\"R_LIBS_USER\"=\""+rServePath+"\");library(Rserve);Rserve("+(debug?"TRUE":"FALSE")+",port="+port+",args=\""+rsrvargs+"\")'|"+cmd+" "+rargs
 							      });
+//			p = Runtime.getRuntime().exec(new String[] {
+//				      "/bin/sh", "-c",
+//				      "echo 'Sys.setenv(\"R_LIBS_USER\"=\""+rServePath+"\");library(Rserve);Rserve("+(debug?"TRUE":"FALSE")+",args=\""+rsrvargs+"\")'|"+cmd+" "+rargs
+//				      });
 			Utilities.printInfo("waiting for Rserve to start ... ("+p+")");
 			// we need to fetch the output - some platforms will die if you don't ...
 			StreamHog errorHog = new StreamHog(p.getErrorStream(), false);

@@ -19,7 +19,7 @@ public class Start {
 		tool.init();
 		tool.installLocalLibs(tool.getRPath());
 		tool.runScenarios();
-		tool.exit();
+		//tool.exit();
 	}
 
 }
