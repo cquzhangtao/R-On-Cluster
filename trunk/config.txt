@@ -2,9 +2,13 @@
 // Empty lines are allowed and you can also use two slashes to comment or disable configurations.
 
 // location of R.exe
-//R_PATH::=/usr/lib/R/bin //Do not forget bin
-R_PATH::=C:\Program Files\R\R-3.4.2\bin 
+R_PATH::=/usr/lib/R/bin //Do not forget bin
+//R_PATH::=C:\Program Files\R\R-3.4.2\bin 
 
 // Rserve installation folder 
-//RServe_Path::=/usr/local/lib/R/site-library 
-RServe_Path::=C:\Users\shufang xie\Documents\R\win-library\3.4            
+RServe_Path::=/usr/local/lib/R/site-library 
+//RServe_Path::=C:\Users\shufang xie\Documents\R\win-library\3.4     
+
+Working_Path::=/home/tao/osramw   
+
+RJAVA_PATH::=/usr/local/lib/R/site-library/rJava    

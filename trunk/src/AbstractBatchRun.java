@@ -6,6 +6,7 @@ import java.net.URISyntaxException;
 import java.nio.charset.Charset;
 import java.nio.file.Files;
 import java.nio.file.Paths;
+import java.nio.file.StandardCopyOption;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.HashMap;
@@ -16,10 +17,10 @@ import java.util.regex.Pattern;
 import org.rosuda.REngine.REXP;
 import org.rosuda.REngine.REXPMismatchException;
 
-public abstract class AbstractBatchRun {
+public abstract class AbstractBatchRun extends BasicLogger {
 	private String appPath;
 	private String installedLibFolder;
-	private int wayToIntegerateJava;
+	private Configuration configs;
 
 	public AbstractBatchRun() {
 
@@ -53,13 +54,14 @@ public abstract class AbstractBatchRun {
 
 	}
 
-	public abstract void start();
+	protected abstract void connect();
 
-	public void printTitle() {
-		System.out.println();
-		System.out.println("R Experiment Tool @Unibw Munich 11-09-2017");
-		System.out.println();
+	public void start() {
+		connect();
+		init();
 	}
+
+
 
 	public void init() {
 		installedLibFolder = getAppPath() + File.separator + "installed_libs";
@@ -72,28 +74,43 @@ public abstract class AbstractBatchRun {
 
 	}
 
-	public void afterScenarioRuns() {
+	public void onScenariosDone() {
+		info();
 		info("All scenarios are executed!");
 		info("Aggregating the results...");
 		// agregateResults(path,scenarios);
 		info("Aggregation is ignored.");
 		info("Batch execution is done!");
+		close();
+		Utilities.killAllRserver();
+		Utilities.exit();
+	}
+
+	public void onScenariosStart() {
+
 	}
 
 	public void runScenarios() {
-		List<List<String>> scenarios = readScenarios();
+
+		info();
+		info("Starting to run scenarios");
+
+		List<List<String>> scenarios = ScenarioUtilities.readScenarios(configs
+				.getWorkingPath());
 
 		for (int i = 1; i < scenarios.size(); i++) {
 			List<String> scenario = scenarios.get(i);
 			if (isScenarioDisable(scenarios.get(0), scenario)) {
 				continue;
 			}
-			String scenarioName = getScenarioName(scenarios.get(0), scenario);
-			String scriptPath = getAppPath() + File.separator + scenarioName
-					+ ".script.txt";
-			runScenario(scenario, scenarios.get(0), scriptPath);
+			// String scenarioName = getScenarioName(scenarios.get(0),
+			// scenario);
+			// String scriptPath = getAppPath() + File.separator + scenarioName
+			// + ".script.txt";
+			runScenario(scenario, scenarios.get(0), configs.getWorkingPath());
 
 		}
+		onScenariosStart();
 
 	}
 
@@ -128,54 +145,59 @@ public abstract class AbstractBatchRun {
 		writer.close();
 	}
 
+	public abstract void onOneScenarioDone(String scenarioName);
+
 	public void runScenario(List<String> scenario, List<String> header,
-			String path) {
-		generateScriptForScenario(header, scenario, path);
+			String workingPath) {
+		info();
+		String script = generateScriptForScenario(header, scenario, workingPath);
 		String scenarioName = getScenarioName(header, scenario);
 		info("Executing the script of Scenario " + scenarioName + " ...");
-		String loadScript = "source('" + path + "')";
+		String loadScript = "source('" + script + "')";
 		loadScript = loadScript.replace("\\", "/");
-		run(loadScript);
-		info("Executed!");
+		runScriptFile(scenarioName, loadScript);
+		onOneScenarioDone(scenarioName);
 	}
 
-	public abstract REXP run(String loadScript);
+	public abstract REXPAdapter run(String loadScript);
 
-	protected List<List<String>> readScenarios() {
-		// try{
-		info("Reading scenarios...");
-		List<List<String>> scenarios = new ArrayList<List<String>>();
-		List<String> configs = null;
-		try {
-			configs = Files.readAllLines(Paths.get(getAppPath()
-					+ File.separator + "scenarios.txt"));
-		} catch (IOException e) {
-			try {
-				Charset charset = Charset.forName("Cp1252");
-				configs = Files.readAllLines(
-						Paths.get(getAppPath() + File.separator
-								+ "scenarios.txt"), charset);
-			} catch (IOException ie) {
-				e.printStackTrace();
-				error("Scenario file is broken.");
-			}
-		}
-		if (configs == null) {
-			return null;
-		}
-		for (String config : configs) {
-			if (config.isEmpty()) {
-				continue;
-			}
-			scenarios.add(Arrays.asList(config.split("\t")));
-		}
-		return scenarios;
-		// } catch (IOException e) {
-		// e.printStackTrace();
-		// error("Config file or template file is broken.");
-		// }
-		// return null;
-	}
+	public abstract void runScriptFile(String name, String file);
+
+	// protected List<List<String>> readScenarios() {
+	// // try{
+	// info("Reading scenarios...");
+	// List<List<String>> scenarios = new ArrayList<List<String>>();
+	// List<String> configs = null;
+	// try {
+	// configs = Files.readAllLines(Paths.get(getAppPath()
+	// + File.separator + "scenarios.txt"));
+	// } catch (IOException e) {
+	// try {
+	// Charset charset = Charset.forName("Cp1252");
+	// configs = Files.readAllLines(
+	// Paths.get(getAppPath() + File.separator
+	// + "scenarios.txt"), charset);
+	// } catch (IOException ie) {
+	// e.printStackTrace();
+	// error("Scenario file is broken.");
+	// }
+	// }
+	// if (configs == null) {
+	// return null;
+	// }
+	// for (String config : configs) {
+	// if (config.isEmpty()) {
+	// continue;
+	// }
+	// scenarios.add(Arrays.asList(config.split("\t")));
+	// }
+	// return scenarios;
+	// // } catch (IOException e) {
+	// // e.printStackTrace();
+	// // error("Config file or template file is broken.");
+	// // }
+	// // return null;
+	// }
 
 	private String getValueOfHeader(String name, List<String> headers,
 			List<String> values) {
@@ -201,7 +223,7 @@ public abstract class AbstractBatchRun {
 	}
 
 	private String getTemplatePath(List<String> configNames,
-			List<String> configValues) {
+			List<String> configValues, String workingPath) {
 		String tempPath = getValueOfHeaderNoExit("Template", configNames,
 				configValues);
 		if (tempPath != null && !tempPath.trim().isEmpty()) {
@@ -210,7 +232,7 @@ public abstract class AbstractBatchRun {
 		String scenarioName = getScenarioName(configNames, configValues);
 		info("No template specified for sceanrio " + scenarioName
 				+ ", try to use the template.txt under tool folder");
-		return getAppPath() + File.separator + "template.txt";
+		return workingPath + File.separator + "template.txt";
 	}
 
 	protected String getScenarioName(List<String> configNames,
@@ -220,7 +242,7 @@ public abstract class AbstractBatchRun {
 
 	protected boolean isScenarioDisable(List<String> headers,
 			List<String> values) {
-		return getValueOfHeader("Include", headers, values).isEmpty();
+		return !getValueOfHeader("Include", headers, values).equalsIgnoreCase("y");
 	}
 
 	private String getOutputFile(List<String> configNames,
@@ -228,11 +250,17 @@ public abstract class AbstractBatchRun {
 		return getValueOfHeader("Output", configNames, configValues);
 	}
 
-	protected void generateScriptForScenario(List<String> names,
-			List<String> values, String scriptPath) {
+	protected String generateScriptForScenario(List<String> names,
+			List<String> values, String workingPath) {
 
-		String tempFile = getTemplatePath(names, values);
+		String tempFile = getTemplatePath(names, values, workingPath);
 		String scenarioName = getScenarioName(names, values);
+		String scenarioPath = workingPath + File.separator + scenarioName;
+		new File(scenarioPath).mkdirs();
+
+		String scriptPath = scenarioPath + File.separator + scenarioName
+				+ ".script";
+
 		info("Reading template for Scenario " + scenarioName + "...");
 		try {
 			String template = new String(
@@ -240,12 +268,39 @@ public abstract class AbstractBatchRun {
 			info("Generating script for Scenario " + scenarioName + "...");
 
 			for (int i = 0; i < names.size(); i++) {
-				String regex = "(?i)"
-						+ Pattern.quote("[[" + names.get(i).trim() + "]]");
-				template = template.replaceAll(regex, values.get(i));
+
+				String name = names.get(i).trim();
+				String value = values.get(i);
+
+				if (name.startsWith("*")) {
+
+					String file = values.get(i);
+					if (!new File(file).exists()) {
+						info("File specified in the scenarios does not exit. Try to find the data file in the user working folder");
+						if(!new File(workingPath+File.separator+file).exists()){
+							error("File specified in the scenarios does not exit in the working folder too. "
+								+ file);
+						}else{
+							info("Found the data file in the user working folder");
+							file=workingPath+File.separator+file;
+						}
+					}
+
+					String desfile = scenarioPath + File.separator
+							+ new File(file).getName();
+
+					Files.copy(Paths.get(file), Paths.get(desfile),
+							StandardCopyOption.REPLACE_EXISTING);
+
+					name = name.substring(1);
+					value = desfile;
+				}
+
+				String regex = "(?i)" + Pattern.quote("[[" + name + "]]");
+				template = template.replaceAll(regex, value);
 			}
-			String regex = "(?i)" + Pattern.quote("[[ScenarioName]]");
-			template = template.replaceAll(regex, scenarioName);
+			String regex = "(?i)" + Pattern.quote("[[ScenarioPath]]");
+			template = template.replaceAll(regex, scenarioPath);
 
 			template = ".libPaths(\"" + installedLibFolder + "\")"
 					+ System.lineSeparator() + template;
@@ -261,63 +316,22 @@ public abstract class AbstractBatchRun {
 			} finally {
 				out.close();
 			}
-			if (template.contains("[[") || template.contains("]]")) {
-				error("One or more parameters are not defined in the config file.");
+			if (template.contains("[[") && template.contains("]]")) {
+				String str = template.substring(template.indexOf("[["),
+						template.indexOf("]]") + 2);
+				error("One or more parameters in the template are not defined in the scenario file.",
+						" If it is a tool-reserved parameter, please spell the name correctly.",
+						str);
 			}
 
 			info("Script is generated.");
+			return scriptPath;
 
 		} catch (IOException e) {
 			error("Template file " + tempFile + " error.");
 		}
+		return null;
 
-	}
-
-	protected void syntaxError(int lineNum, String content) {
-		error("Syntax error in the config file:", "Line " + lineNum + " :"
-				+ content);
-	}
-
-	protected void info(String... errors) {
-		if (errors.length == 0) {
-			Utilities.printInfo();
-		} else {
-			Utilities.printInfo(errors);
-		}
-	}
-
-	protected void error(String... errors) {
-		errorNoExit(errors);
-		info("The tool is terminated.");
-		exit();
-	}
-
-	protected void errorNoExit(String... errors) {
-		for (String error : errors) {
-			System.err.println("ERROR: " + error);
-		}
-		try {
-			Thread.sleep(10);
-		} catch (InterruptedException e) {
-			// e.printStackTrace();
-		}
-
-	}
-
-	void exit() {
-		// close();
-		try {
-			if (OSValidator.isWindows()) {
-				info("Please press any key to quit ......");
-				System.in.read();
-			} else {
-
-			}
-		} catch (IOException e1) {
-			e1.printStackTrace();
-		}
-		Utilities.killAllRserver();
-		System.exit(-1);
 	}
 
 	protected abstract void close();
@@ -330,7 +344,8 @@ public abstract class AbstractBatchRun {
 		this.appPath = appPath;
 	}
 
-	public void installLocalLibs(String rPath) {
+	public void installLocalLibs() {
+
 		String libFolder = getAppPath() + File.separator + "lib";
 
 		if (!new File(libFolder).exists()) {
@@ -341,7 +356,7 @@ public abstract class AbstractBatchRun {
 		// REXP ret =engine.eval("installed.packages()[,c(1,3)]");
 		// info(ret.asStringArray().toString());
 		// REXP ret =run(".libPaths(\""+installedLibFolder+"\")");
-		REXP yret = run(".libPaths()");
+		run(".libPaths()");
 		// info(ret..toString());
 
 		File[] files = new File(libFolder).listFiles();
@@ -373,28 +388,24 @@ public abstract class AbstractBatchRun {
 								name.lastIndexOf("/") + 1,
 								name.lastIndexOf("_"));
 						// info("Loading libaray "+shortName+" ...");
-						REXP re = run("'" + shortName
+						REXPAdapter re = run("'" + shortName
 								+ "' %in% installed.packages()[,c(1,3)]");
-						try {
-							if (re != null && re.asString() != null
-									&& re.asString().equalsIgnoreCase("true")) {
-								installed = true;
-								
-								continue;
-							}
-						} catch (REXPMismatchException e) {
 
-							e.printStackTrace();
-							error("Cannot install library:" + name);
+						if (re != null && re.isBoolean()&& re.isTrue()) {
+							installed = true;
+
+							continue;
 						}
+
 						info("Installing libaray " + shortName + " ...");
 					}
 					someUninstalled = true;
-					if (OSValidator.isWindows()) {
+					if (OSValidator.isWindows()
+							|| this instanceof BatchRunStandAlone) {
 						// REXP re
 						// =run("install.packages(\""+name+"\",\""+installedLibFolder+"\",repos = NULL, type=\"source\")");
-						REXP re = run("install.packages(\"" + name + "\",\""
-								+ installedLibFolder
+						REXPAdapter re = run("install.packages(\"" + name
+								+ "\",\"" + installedLibFolder
 								+ "\",repos = NULL, type=\"source\")");
 
 						if (re == null) {
@@ -402,15 +413,16 @@ public abstract class AbstractBatchRun {
 						}
 
 					} else {
+						String rPath = configs.getRPath();
 						String str = rPath + "/R CMD INSTALL --library="
 								+ installedLibFolder + " " + name;
 						try {
 							info(str);
 							Process p = Runtime.getRuntime().exec(str);
-							StreamHog errorHog = new
-							 StreamHog(p.getErrorStream(), false);
-							 StreamHog outputHog = new
-							StreamHog(p.getInputStream(), false);
+							StreamHog errorHog = new StreamHog(
+									p.getErrorStream(), false);
+							StreamHog outputHog = new StreamHog(
+									p.getInputStream(), false);
 							p.waitFor();
 						} catch (IOException e) {
 							// TODO Auto-generated catch block
@@ -428,20 +440,20 @@ public abstract class AbstractBatchRun {
 		}
 	}
 
-	public int getWayToIntegerateJava() {
-		return wayToIntegerateJava;
-	}
-
-	public void setWayToIntegerateJava(int wayToIntegerateJava) {
-		this.wayToIntegerateJava = wayToIntegerateJava;
-	}
-
 	public String getInstalledLibFolder() {
 		return installedLibFolder;
 	}
 
 	public void setInstalledLibFolder(String installedLibFolder) {
 		this.installedLibFolder = installedLibFolder;
+	}
+
+	public Configuration getConfigs() {
+		return configs;
+	}
+
+	public void setConfigs(Configuration configs) {
+		this.configs = configs;
 	}
 
 }

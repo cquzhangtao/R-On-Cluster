@@ -9,77 +9,53 @@ public class BatchRunOnServer extends AbstractBatchRun {
 	private RConnection connection;
 	private String scenarioName=null;
 
-	public String getScenarioName() {
-		return scenarioName;
-	}
-
-	public void setScenarioName(String scenarioName) {
-		this.scenarioName = scenarioName;
-	}
-
-	public RConnection getConnection() {
-		return connection;
-	}
-
-	public void setConnection(RConnection connection) {
-		this.connection = connection;
-	}
-
-	private int port;
+	
+	private int port=6311;
 
 	public BatchRunOnServer(int port) {
 		super();
-		setWayToIntegerateJava(0);
 		this.port = port;
 
 	}
+	public BatchRunOnServer() {
+		super();
+		setConfigs(new Configuration(getAppPath()));
+		ServerThread.startServer(getConfigs().getRPath(),getConfigs().getRServePath(),port);
+	}
 
 	@Override
-	public REXP run(String loadScript) {
+	public REXPAdapter run(String loadScript) {
 		REXP result = null;
-		if (scenarioName == null) {
+
 			try {
 				result = connection.eval(loadScript);
 			} catch (RserveException e) {
 				error("Script error:" + loadScript);
 			}
-		} else {
-			try {
-				result = connection.parseAndEval("try(eval(parse(text=" + loadScript + ")),silent=TRUE)");
-			} catch (REngineException | REXPMismatchException e) {
-
-				error("Script error in Scenario " + scenarioName + ".script.txt", loadScript);
-
+			if(result==null){
+				error("Script error:" + loadScript);
 			}
-			if (result.inherits("try-error"))
-				try {
-					errorNoExit("Script error in Scenario " + scenarioName + ".script.txt", loadScript);
-					error(result.asString().split("\n"));
-				} catch (REXPMismatchException e) {
-					// TODO Auto-generated catch block
-					// e.printStackTrace();
-				}
-		}
 
-		return result;
+
+		return new REXPAdapter(result);
 	}
 
 	@Override
 	public void close() {
 		if (connection != null) {
 			info("Shutdown the server at port " + port);
-			// connection.close();
-			try {
-				connection.serverShutdown();
-			} catch (RserveException e) {
+			connection.close();
+			//try {
+				//connection.serverShutdown();
+			//} catch (RserveException e) {
 				// TODO Auto-generated catch block
-				e.printStackTrace();
-			}
+				//e.printStackTrace();
+			//}
 		}
 	}
 
 	@Override
-	public void start() {
+	public void connect() {
 
 		try {
 			//if (OSValidator.isWindows()) {
@@ -98,5 +74,49 @@ public class BatchRunOnServer extends AbstractBatchRun {
 		info("Connected");
 
 	}
+
+	@Override
+	public void runScriptFile(String name, String loadScript) {
+		REXP result = null;
+		try {
+			result = connection.parseAndEval("try(eval(parse(text=" + loadScript + ")),silent=TRUE)");
+		} catch (REngineException | REXPMismatchException e) {
+
+			error("Script error in Scenario " + scenarioName + ".script.txt", loadScript);
+
+		}
+		if (result.inherits("try-error"))
+			try {
+				errorNoExit("Script error in Scenario " + scenarioName + ".script.txt", loadScript);
+				error(result.asString().split("\n"));
+			} catch (REXPMismatchException e) {
+				// TODO Auto-generated catch block
+				// e.printStackTrace();
+			}
+		
+	}
+	
+	public String getScenarioName() {
+		return scenarioName;
+	}
+
+	public void setScenarioName(String scenarioName) {
+		this.scenarioName = scenarioName;
+	}
+
+	public RConnection getConnection() {
+		return connection;
+	}
+
+	public void setConnection(RConnection connection) {
+		this.connection = connection;
+	}
+	
+	@Override
+	public void onOneScenarioDone(String scenarioName) {
+		info(scenarioName+" is done!");
+		
+	}
+
 
 }

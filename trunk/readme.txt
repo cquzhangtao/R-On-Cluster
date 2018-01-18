@@ -1,3 +1,85 @@
+//New instruction 
+
+
+1) make sure java, R, and Rserve are installed and up to date.
+
+
+2) copy the tool folder on your machine.
+
+The folder has the following contents,
+
+----lib                 //please put all required libraries in this folder
+
+----installed_lib       // The libraries in the lib folder will be installed under this folder
+
+----tool.jar            // This is an runnable jar file. All codes are inside.
+
+----tool_lib            // This includes the R related jar files needed by the tool
+
+----run.bat             // on windows click this file to run the tool
+
+----config.txt          // the config file
+
+----test                // this folder contains a simple scenario file and a simple template file, which can be used to test the installation.
+
+3) modify the config file
+
+please set installation paths of R and Rserve, and the user working path.
+
+
+4) create the scenario file
+
+In the scenario file, please add names of all parameters in the first line and separate with a tab. 
+Please also add the following headers: Include, Name, and Template. 
+The column "Template" refers to the locations of templates used by the scenarios. 
+
+If the column Include is set to "y" or "Y" , the scenario will be included. For other letters, not included. Please do not use white space here.
+
+Please add new lines to define scenarios. The values are also separated with a tab. Empty lines are allowed.
+
+!!!!The name of the scenario file is fixed to "scenarios.txt" and please put it under the user working folder.
+!!!!Please keep the names of parameters in the template file and the scenarios.txt file the same.The names of parameters are case insensitive. The order of the headers does not matter. 
+
+
+!!NEW!! "ScenarioPath" is a build-in parameter. You do not need to define it. It refers to the location: User_working_path/Scenario_Name/.
+!!NEW!! Column "Template" is optional. If you do not add this column, All scenarios will use the template.txt under the user working folder.
+!!NEW!! If the parameter name starts with *, we will consider the values as file paths. The corresponding files will be copied to the scenario folders: 
+!!NEW!! If the input data files do not exist, the file path will be considered to the relative path starting from the user working path
+!!NEW!! The generated scripts will be also put in the scenario folders.
+
+
+
+!!ATTENTION!!
+!!PUT scenarios.txt IN THE USER WORKING FOLDER.
+
+5) create the template file
+
+please use "[[name of a parameter]]" to replace the values you want to config later. There is no requirement on the names of parameters.
+If all scenarios use the same template, you can put the template under the user working folder without specifying in the scenario file.
+
+!!ATTENTION!! For the names starting with "*" in the scenario file, please do not write "*" in the templates.
+
+
+
+
+6) 	test the installation
+
+a. set the user working path in config.txt to the test folder (full path)
+
+b. execute a command to run the jar file
+
+$ java -jar tool.jar
+
+c. if everything goes well, in the test folder, 5 scenario folders will be created and each one contains a script file, a data file, and a result file.
+
+
+
+
+
+
+
+/////////////////////////////////////////////////////////////////////////////////////////////////
+// old instruction
 
 A. Installation 
 

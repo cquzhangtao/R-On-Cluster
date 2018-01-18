@@ -43,7 +43,29 @@ public class Utilities {
 		} catch (InterruptedException e) {
 			//e.printStackTrace();
 		}
-		System.exit(0);
 	}	
+	
+	public static void printErrorAndExit(String... errors){
+		printError(errors);
+		exit();
+	}	
+	
+	public static void exit() {
+		// close();
+		try {
+			if (OSValidator.isWindows()) {
+				printInfo("Please press any key to quit ......");
+				System.in.read();
+			} else {
+
+			}
+		} catch (IOException e1) {
+			e1.printStackTrace();
+		}
+		Utilities.killAllRserver();
+		System.exit(-1);
+	}
+	
+	
 
 }

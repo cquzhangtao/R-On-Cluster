@@ -22,7 +22,7 @@ public class ServerThread extends Thread{
 	}
 	public void run(){
 		
-		server.run(script);
+		server.runScriptFile(server.getScenarioName(),script);
 
 		Utilities.printInfo("*******************************************","Scenario "+ server.getScenarioName()+" is executed!","*******************************************");
 
