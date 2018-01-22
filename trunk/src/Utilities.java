@@ -1,4 +1,7 @@
 import java.io.IOException;
+import java.lang.reflect.Field;
+import java.net.ServerSocket;
+import java.util.Date;
 
 public class Utilities {
 	
@@ -64,6 +67,40 @@ public class Utilities {
 		}
 		Utilities.killAllRserver();
 		System.exit(-1);
+	}
+	
+	//public static int port=3333;
+	
+	public static int getAvailablePort() {
+		//return port++;
+		
+		try {
+			ServerSocket socket = new ServerSocket(0);
+			int port=socket.getLocalPort();
+			socket.close();
+
+			return port;
+		} catch (IOException e) {
+			// TODO Auto-generated catch block
+			//e.printStackTrace();
+			Utilities.printErrorAndExit("Finad avaiable port error");
+			return -1;
+		}
+	
+	
+	}
+	
+	public static void killProcess(Process process){
+		if(process.getClass().getName().equals("java.lang.UNIXProcess")) {
+			  /* get the PID on unix/linux systems */
+			  try {
+			    Field f = process.getClass().getDeclaredField("pid");
+			    f.setAccessible(true);
+			    int pid = f.getInt(process);
+			    Runtime.getRuntime().exec("kill "+pid);
+			  } catch (Throwable e) {
+			  }
+			}
 	}
 	
 	

@@ -4,8 +4,9 @@ public class Start {
 
 	public static void main(String[] args) {
 
-		Utilities.killAllRserver();
+		
 		if (args.length > 0) {
+			Utilities.killAllRserver();
 			return;
 		}
 		printTitle();

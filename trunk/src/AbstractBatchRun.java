@@ -82,7 +82,6 @@ public abstract class AbstractBatchRun extends BasicLogger {
 		info("Aggregation is ignored.");
 		info("Batch execution is done!");
 		close();
-		Utilities.killAllRserver();
 		Utilities.exit();
 	}
 
@@ -231,7 +230,7 @@ public abstract class AbstractBatchRun extends BasicLogger {
 		}
 		String scenarioName = getScenarioName(configNames, configValues);
 		info("No template specified for sceanrio " + scenarioName
-				+ ", try to use the template.txt under tool folder");
+				+ ", try to use the template.txt under the working path");
 		return workingPath + File.separator + "template.txt";
 	}
 
@@ -262,10 +261,15 @@ public abstract class AbstractBatchRun extends BasicLogger {
 				+ ".script";
 
 		info("Reading template for Scenario " + scenarioName + "...");
+		String template=null;
 		try {
-			String template = new String(
+			template = new String(
 					Files.readAllBytes(Paths.get(tempFile)));
-			info("Generating script for Scenario " + scenarioName + "...");
+		} catch (IOException e) {
+			error("Read template file " + tempFile + " error. It may not exsit or be broken.");
+		}
+		info("Generating script for Scenario " + scenarioName + "...");
+	
 
 			for (int i = 0; i < names.size(); i++) {
 
@@ -289,8 +293,13 @@ public abstract class AbstractBatchRun extends BasicLogger {
 					String desfile = scenarioPath + File.separator
 							+ new File(file).getName();
 
-					Files.copy(Paths.get(file), Paths.get(desfile),
-							StandardCopyOption.REPLACE_EXISTING);
+					try {
+						Files.copy(Paths.get(file), Paths.get(desfile),
+								StandardCopyOption.REPLACE_EXISTING);
+					} catch (IOException e) {
+						//e.printStackTrace();
+						error("Copy input file to "+desfile+" error.",e.getClass().getName());
+					}
 
 					name = name.substring(1);
 					value = desfile;
@@ -327,10 +336,8 @@ public abstract class AbstractBatchRun extends BasicLogger {
 			info("Script is generated.");
 			return scriptPath;
 
-		} catch (IOException e) {
-			error("Template file " + tempFile + " error.");
-		}
-		return null;
+		
+		
 
 	}
 

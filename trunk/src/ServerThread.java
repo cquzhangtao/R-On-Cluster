@@ -1,18 +1,25 @@
+import java.io.IOException;
+import java.net.ServerSocket;
+
 
 public class ServerThread extends Thread{
-	private static int port=6311;
+	//private static int port=6311;
 	private String script;
 	private BatchRunOnServer server;
+	private Process process=null;
 	
 
 	public ServerThread(String rPath,String rServePath){
-		port++;
+		//port++;
+		int port;
+		port = Utilities.getAvailablePort();
 		//if(OSValidator.isWindows()){
-			startServer(rPath,rServePath,port);
+			setProcess(startServer(rPath,rServePath,port));
 		//}
 		server=new BatchRunOnServer(port);
 		server.start();
 	}
+
 	public String getScript() {
 		return script;
 	}
@@ -25,14 +32,22 @@ public class ServerThread extends Thread{
 		server.runScriptFile(server.getScenarioName(),script);
 
 		Utilities.printInfo("*******************************************","Scenario "+ server.getScenarioName()+" is executed!","*******************************************");
-
+		if(process!=null){
+			//process.destroyForcibly();
+			//System.out.println(process.getClass().getName());
+			server.close();
+			//process.destroy();
+	
+			//Utilities.killProcess(process);
+			//Utilities.printInfo("Process for "+server.getScenarioName()+" is killed.");
+		}
 		
 		
 	}
 	public void close(){
 		server.close();	
 	}
-	public static void startServer(String rPath,String rServePath,int port){
+	public static Process startServer(String rPath,String rServePath,int port){
 //		BatchRunStandAlone run=new BatchRunStandAlone();
 //		run.start();
 //		run.run(".libPaths(\"C:/Users/shufang xie/Documents/R/win-library/3.4\")"+System.lineSeparator()+"library('Rserve')"+System.lineSeparator()+"Rserve(port="+ port+")");
@@ -45,7 +60,7 @@ public class ServerThread extends Thread{
 			cmd=rPath+"/R";
 		}
 		
-		StartRserve.launchRserve(cmd,rServePath.replace("\\", "/"),port);
+		return StartRserve.launchRserve(cmd,rServePath.replace("\\", "/"),port);
 
 	}
 	public BatchRunOnServer getServer() {
@@ -53,6 +68,12 @@ public class ServerThread extends Thread{
 	}
 	public void setServer(BatchRunOnServer server) {
 		this.server = server;
+	}
+	public Process getProcess() {
+		return process;
+	}
+	public void setProcess(Process process) {
+		this.process = process;
 	}
 	
 }

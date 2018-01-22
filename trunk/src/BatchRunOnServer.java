@@ -12,6 +12,12 @@ public class BatchRunOnServer extends AbstractBatchRun {
 	
 	private int port=6311;
 
+	public int getPort() {
+		return port;
+	}
+	public void setPort(int port) {
+		this.port = port;
+	}
 	public BatchRunOnServer(int port) {
 		super();
 		this.port = port;
@@ -44,13 +50,15 @@ public class BatchRunOnServer extends AbstractBatchRun {
 	public void close() {
 		if (connection != null) {
 			info("Shutdown the server at port " + port);
-			connection.close();
-			//try {
-				//connection.serverShutdown();
-			//} catch (RserveException e) {
+			
+			try {
+				connection.shutdown();
+			} catch (RserveException e) {
 				// TODO Auto-generated catch block
-				//e.printStackTrace();
-			//}
+				e.printStackTrace();
+			}
+			connection.close();
+
 		}
 	}
 

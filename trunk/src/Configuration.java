@@ -64,21 +64,26 @@ public class Configuration extends BasicLogger{
 	}
 	
 	public String getWorkingPath(){
-		String path=getParameter("WORKING_PATH");
+	
+		return getPath("WORKING_PATH");
+	}
+	
+	private String getPath(String pathname){
+		String path=getParameter(pathname);
 		if(!new File(path).exists()){
-			error("The specified user working path does not exist.",path);
+			error("The specified "+pathname+" does not exist.",path);
 		}
 		return path;
 	}
 	
 	public String getRPath(){
-		return getParameter("R_PATH");
+		return getPath("R_PATH");
 	}
 	public String getRServePath(){
-		return getParameter("RSERVE_PATH");
+		return getPath("RSERVE_PATH");
 	}
 	public String getRJavaPath(){
-		return getParameter("RJAVA_PATH");
+		return getPath("RJAVA_PATH");
 	}
 	
 	private String getParameter(String name){

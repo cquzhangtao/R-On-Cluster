@@ -45,8 +45,8 @@ class StreamHog extends Thread {
  */
 public class StartRserve {
 	/** shortcut to <code>launchRserve(cmd, "--no-save --slave", "--no-save --slave", false)</code> */
-	public static boolean launchRserve(String cmd,String rServePath) { return launchRserve(cmd, "--no-save --slave","--no-save --slave",6311,false,rServePath); }
-	public static boolean launchRserve(String cmd,String rServePath,int port) { return launchRserve(cmd, "--no-save --slave","--no-save --slave",port,false,rServePath); }
+	public static Process launchRserve(String cmd,String rServePath) { return launchRserve(cmd, "--no-save --slave","--no-save --slave",6311,false,rServePath); }
+	public static Process launchRserve(String cmd,String rServePath,int port) { return launchRserve(cmd, "--no-save --slave","--no-save --slave",port,false,rServePath); }
 	
 	/** attempt to start Rserve. Note: parameters are <b>not</b> quoted, so avoid using any quotes in arguments
 	 @param cmd command necessary to start R
@@ -54,19 +54,24 @@ public class StartRserve {
 	 @param rsrvargs arguments to be passed to Rserve
 	 @return <code>true</code> if Rserve is running or was successfully started, <code>false</code> otherwise.
 	 */
-	public static boolean launchRserve(String cmd, String rargs, String rsrvargs,int port, boolean debug,String rServePath) {
+	public static Process launchRserve(String cmd, String rargs, String rsrvargs,int port, boolean debug,String rServePath) {
+		Process p;
 		try {
-			Process p;
+			
 			boolean isWindows = false;
 			String osname = System.getProperty("os.name");
+			
 			if (osname != null && osname.length() >= 7 && osname.substring(0,7).equals("Windows")) {
 				isWindows = true; /* Windows startup */
 				p = Runtime.getRuntime().exec("\""+cmd+"\" -e \"Sys.setenv('R_LIBS_USER'='"+rServePath+"');library(Rserve);Rserve("+(debug?"TRUE":"FALSE")+",port="+port+",args='"+rsrvargs+"')\" "+rargs);
-			} else /* unix startup */
-				p = Runtime.getRuntime().exec(new String[] {
-							      "/bin/sh", "-c",
-							      "echo 'Sys.setenv(\"R_LIBS_USER\"=\""+rServePath+"\");library(Rserve);Rserve("+(debug?"TRUE":"FALSE")+",port="+port+",args=\""+rsrvargs+"\")'|"+cmd+" "+rargs
-							      });
+			} else{ /* unix startup */
+				String[] com=new String[] {
+					      "/bin/sh", "-c",
+					      "echo '.libPaths(\""+rServePath+"\");library(Rserve);Rserve("+(debug?"TRUE":"FALSE")+",port="+port+",args=\""+rsrvargs+"\")'|"+cmd+" "+rargs
+					      };
+				//Utilities.printInfo(com);
+				p = Runtime.getRuntime().exec(com);
+			}
 //			p = Runtime.getRuntime().exec(new String[] {
 //				      "/bin/sh", "-c",
 //				      "echo 'Sys.setenv(\"R_LIBS_USER\"=\""+rServePath+"\");library(Rserve);Rserve("+(debug?"TRUE":"FALSE")+",args=\""+rsrvargs+"\")'|"+cmd+" "+rargs
@@ -80,8 +85,9 @@ public class StartRserve {
 			//Utilities.printInfo("call terminated, let us try to connect ...");
 		} catch (Exception x) {
 			Utilities.printError("failed to start Rserve process with "+x.getMessage());
-			return false;
+			return null;
 		}
+		return p;
 //		int attempts = 5; /* try up to 5 times before giving up. We can be conservative here, because at this point the process execution itself was successful and the start up is usually asynchronous */
 //		while (attempts > 0) {
 //			try {
@@ -96,7 +102,7 @@ public class StartRserve {
 //			try { Thread.sleep(500); } catch (InterruptedException ix) { };
 //			attempts--;
 //		}
-		return false;
+		//return false;
 	}
 
 //	/** checks whether Rserve is running and if that's not the case it attempts to start it using the defaults for the platform where it is run on. This method is meant to be set-and-forget and cover most default setups. For special setups you may get more control over R with <<code>launchRserve</code> instead. */

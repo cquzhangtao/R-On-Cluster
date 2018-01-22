@@ -6,7 +6,7 @@ R_PATH::=/usr/lib/R/bin //Do not forget bin
 //R_PATH::=C:\Program Files\R\R-3.4.2\bin 
 
 // Rserve installation folder 
-RServe_Path::=/usr/local/lib/R/site-library 
+RServe_Path::=/home/tao/rextool/syslib
 //RServe_Path::=C:\Users\shufang xie\Documents\R\win-library\3.4     
 
 Working_Path::=/home/tao/osramw   

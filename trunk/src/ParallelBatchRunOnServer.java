@@ -1,15 +1,23 @@
 import java.util.ArrayList;
 import java.util.List;
 
+import org.rosuda.REngine.REXPMismatchException;
+import org.rosuda.REngine.Rserve.RserveException;
+
 public class ParallelBatchRunOnServer extends BatchRunOnServer{
 	
-	private static int port=6311;
 	private List<ServerThread> threads=new ArrayList<ServerThread>();
+	private Process process=null;
+	
 	
 	public ParallelBatchRunOnServer(){
-		super(port);
+
+		super(0);
+		 
+		int port=Utilities.getAvailablePort();
+		this.setPort(port);
 		setConfigs(new Configuration(getAppPath()));
-		ServerThread.startServer(getConfigs().getRPath(),getConfigs().getRServePath(),port);
+		process=ServerThread.startServer(getConfigs().getRPath(),getConfigs().getRServePath(),port);
 	}
 	
 	
@@ -25,31 +33,29 @@ public class ParallelBatchRunOnServer extends BatchRunOnServer{
 			}
 		}
 		
+		//killProcesses();
 		onScenariosDone();
+	
 	}
 	
 	
+	private void killProcesses(){
+		//for(ServerThread thread:threads){
+		//	if(thread.getProcess()!=null){
+		//		thread.getProcess().destroyForcibly();
+		//	}
+		//}
+		close();
+		if(process!=null){
+			process.destroyForcibly();
+		}
 		
 //		for(ServerThread thread:threads){
-//			//thread.close();
-//			try {
-//				int rServerPid=thread.getServer().getConnection().eval("Sys.getpid()").asInteger();
-//				this.getConnection().eval("tools::pskill("+ rServerPid + ")");
-//				this.getConnection().eval("tools::pskill("+ rServerPid + ", tools::SIGKILL)");
-//			} catch (RserveException e) {
-//				// TODO Auto-generated catch block
-//				e.printStackTrace();
-//			} catch (REXPMismatchException e) {
-//				// TODO Auto-generated catch block
-//				e.printStackTrace();
-//			}
-//		}
-//		BatchRunStandAlone run=new BatchRunStandAlone();
-//		run.start();
+//		//thread.close();
 //		try {
-//			int rServerPid=getConnection().eval("Sys.getpid()").asInteger();
-//			run.run("tools::pskill("+ rServerPid + ")");
-//			run.run("tools::pskill("+ rServerPid + ", tools::SIGKILL)");
+//			int rServerPid=thread.getServer().getConnection().eval("Sys.getpid()").asInteger();
+//			this.getConnection().eval("tools::pskill("+ rServerPid + ")");
+//			this.getConnection().eval("tools::pskill("+ rServerPid + ", tools::SIGKILL)");
 //		} catch (RserveException e) {
 //			// TODO Auto-generated catch block
 //			e.printStackTrace();
@@ -57,7 +63,25 @@ public class ParallelBatchRunOnServer extends BatchRunOnServer{
 //			// TODO Auto-generated catch block
 //			e.printStackTrace();
 //		}
-//		run.close();
+//	}
+//	BatchRunStandAlone run=new BatchRunStandAlone();
+//	run.start();
+//	try {
+//		int rServerPid=getConnection().eval("Sys.getpid()").asInteger();
+//		run.run("tools::pskill("+ rServerPid + ")");
+//		run.run("tools::pskill("+ rServerPid + ", tools::SIGKILL)");
+//	} catch (RserveException e) {
+//		// TODO Auto-generated catch block
+//		e.printStackTrace();
+//	} catch (REXPMismatchException e) {
+//		// TODO Auto-generated catch block
+//		e.printStackTrace();
+//	}
+//	run.close();
+		
+	}
+		
+
 
 
 //
