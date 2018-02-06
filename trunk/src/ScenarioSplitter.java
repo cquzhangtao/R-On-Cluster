@@ -33,11 +33,13 @@ public class ScenarioSplitter {
 
 			}
 
-			// String
-			// path=inputfile.substring(0,path.lastIndexOf(File.separator));
+			String path=inputfile.substring(0,inputfile.lastIndexOf(File.separator))+File.separator+"splitteddataset";
+			new File(path).mkdirs();
+			String filename=inputfile.substring(inputfile.lastIndexOf(File.separator));
+			
 
 			for (String station : splittedDataset.keySet()) {
-				PrintWriter writer = new PrintWriter(inputfile + "." + station);
+				PrintWriter writer = new PrintWriter(path+filename + "." + station);
 				for (String line : splittedDataset.get(station)) {
 					writer.println(line);
 				}
@@ -88,11 +90,14 @@ public class ScenarioSplitter {
 		for (int i = 0; i < header.size(); i++) {
 			if (header.get(i).startsWith("*")) {
 				inputHeader = header.get(i);
-			} else {
+			} else if(header.get(i).equalsIgnoreCase("name")){
+				
+			}
+			else {
 				newHeader += header.get(i) + "\t";
 			}
 		}
-		newHeader += inputHeader;
+		newHeader += inputHeader+"\tName";
 		return newHeader;
 	}
 
@@ -102,6 +107,7 @@ public class ScenarioSplitter {
 		Set<String> stations = null;
 		int inputIdx = 0;
 		String file = "";
+		String name="";
 		for (int i = 0; i < header.size(); i++) {
 			if (header.get(i).startsWith("*")) {
 				file = values.get(i);
@@ -120,8 +126,12 @@ public class ScenarioSplitter {
 				}
 				stations = split(file);
 				inputIdx = i;
-				break;
+				//break;
 
+			}
+			
+			if(header.get(i).equalsIgnoreCase("name")){
+				name=values.get(i);
 			}
 		}
 
@@ -132,6 +142,9 @@ public class ScenarioSplitter {
 			if (inputIdx == i) {
 				continue;
 			}
+			if(header.get(i).equalsIgnoreCase("name")){
+				continue;
+			}
 			// if(i<values.size()-1){
 			str += values.get(i) + "\t";
 			// }else{
@@ -139,9 +152,13 @@ public class ScenarioSplitter {
 			// }
 
 		}
+		
+		String path=file.substring(0,file.lastIndexOf(File.separator))+File.separator+"splitteddataset";
+		
+		String filename=file.substring(file.lastIndexOf(File.separator));
 
 		for (String station : stations) {
-			newScenarios.add(str + file + "." + station);
+			newScenarios.add(str + path+filename + "." + station+"\t"+name+"_"+station);
 		}
 
 		return newScenarios;
