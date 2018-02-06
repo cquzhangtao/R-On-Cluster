@@ -19,6 +19,7 @@ public class ScenarioSplitter {
 
 		try {
 			List<String> dataset = Files.readAllLines(Paths.get(inputfile));
+			String header=dataset.remove(0);
 
 			for (String data : dataset) {
 				if (data.isEmpty() || !data.contains("\t")) {
@@ -40,6 +41,7 @@ public class ScenarioSplitter {
 
 			for (String station : splittedDataset.keySet()) {
 				PrintWriter writer = new PrintWriter(path+filename + "." + station);
+				writer.println(header);
 				for (String line : splittedDataset.get(station)) {
 					writer.println(line);
 				}
@@ -56,6 +58,7 @@ public class ScenarioSplitter {
 	}
 
 	public static void createScenarios(String path) {
+		Utilities.printInfo("Splitting the scnarios...");
 		try {
 			List<List<String>> scenarios = ScenarioUtilities
 					.readScenarios(path);
@@ -73,9 +76,12 @@ public class ScenarioSplitter {
 				for (String sce : newScenarios) {
 					writer.println(sce);
 				}
+				
 
 			}
 			writer.close();
+			
+			Utilities.printInfo("Splitting the scnarios is done");
 
 		} catch (IOException e) {
 			e.printStackTrace();
@@ -112,15 +118,15 @@ public class ScenarioSplitter {
 			if (header.get(i).startsWith("*")) {
 				file = values.get(i);
 				if (!new File(file).exists()) {
-					Utilities
-							.printInfo("File specified in the scenarios does not exit. Try to find the data file in the user working folder");
+					//Utilities
+						//	.printInfo("File specified in the scenarios does not exit. Try to find the data file in the user working folder");
 					if (!new File(workingPath + File.separator + file).exists()) {
 						Utilities
 								.printErrorAndExit("File specified in the scenarios does not exit in the working folder too. "
 										+ file);
 					} else {
-						Utilities
-								.printInfo("Found the data file in the user working folder");
+						//Utilities
+							//	.printInfo("Found the data file in the user working folder");
 						file = workingPath + File.separator + file;
 					}
 				}
@@ -160,12 +166,14 @@ public class ScenarioSplitter {
 		for (String station : stations) {
 			newScenarios.add(str + path+filename + "." + station+"\t"+name+"_"+station);
 		}
+		
+		Utilities.printInfo(newScenarios.size()+" dispatching stations found in Scenario "+name);
 
 		return newScenarios;
 
 	}
 
-	private String getValueOfHeader(String name, List<String> headers,
+	private  static String getValueOfHeader(String name, List<String> headers,
 			List<String> values) {
 		String value = getValueOfHeaderNoExit(name, headers, values);
 		if (value != null) {
@@ -176,7 +184,7 @@ public class ScenarioSplitter {
 		return null;
 	}
 
-	private String getValueOfHeaderNoExit(String name, List<String> headers,
+	private  static String getValueOfHeaderNoExit(String name, List<String> headers,
 			List<String> values) {
 		if (headers.size() != values.size()) {
 			Utilities
@@ -190,12 +198,12 @@ public class ScenarioSplitter {
 		return null;
 	}
 
-	protected String getScenarioName(List<String> configNames,
+	protected static String getScenarioName(List<String> configNames,
 			List<String> configValues) {
 		return getValueOfHeader("Name", configNames, configValues);
 	}
 
-	protected boolean isScenarioDisable(List<String> headers,
+	protected  static boolean isScenarioDisable(List<String> headers,
 			List<String> values) {
 		return !getValueOfHeader("Include", headers, values).equalsIgnoreCase(
 				"y");
