@@ -7,7 +7,16 @@ public class ServerThread extends Thread{
 	private String script;
 	private BatchRunOnServer server;
 	private Process process=null;
+	private boolean succeed=false;
 	
+
+	public boolean isSucceed() {
+		return succeed;
+	}
+
+	public void setSucceed(boolean succeed) {
+		this.succeed = succeed;
+	}
 
 	public ServerThread(String rPath,String rServePath){
 		//port++;
@@ -29,9 +38,12 @@ public class ServerThread extends Thread{
 	}
 	public void run(){
 		
-		server.runScriptFile(server.getScenarioName(),script);
+		succeed=server.runScriptFile(server.getScenarioName(),script);
+		
+		if(succeed){
 
-		Utilities.printInfo("*******************************************","Scenario "+ server.getScenarioName()+" is executed!","*******************************************");
+			Utilities.printInfo("*******************************************","Scenario "+ server.getScenarioName()+" is executed!","*******************************************");
+		}
 		if(process!=null){
 			//process.destroyForcibly();
 			//System.out.println(process.getClass().getName());

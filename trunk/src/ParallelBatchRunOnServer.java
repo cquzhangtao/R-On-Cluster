@@ -24,6 +24,7 @@ public class ParallelBatchRunOnServer extends BatchRunOnServer{
 	
 	@Override
 	public void onScenariosStart(){
+		List<ServerThread> failedThreads=new ArrayList<ServerThread>();
 		for(ServerThread thread:threads){
 			try {
 				thread.join();
@@ -32,9 +33,29 @@ public class ParallelBatchRunOnServer extends BatchRunOnServer{
 				e.printStackTrace();
 			}
 		}
+		String str="";
+		
+		for(ServerThread thread:threads){
+			if(!thread.isSucceed()){
+				str+=thread.getServer().getScenarioName()+" ";
+			}
+		}
+		
+		info();
+		info();
+		
+		if(!str.isEmpty()){
+			info("Scenarios " +str+" failed");
+		}else{
+			info("All Scenarios are executed successfully");
+		}
+		
+		info("Batch execution is done!");
+		close();
+		Utilities.exit();
 		
 		//killProcesses();
-		onScenariosDone();
+		//onScenariosDone();
 	
 	}
 	
@@ -98,7 +119,7 @@ public class ParallelBatchRunOnServer extends BatchRunOnServer{
 	
 	@Override
 	
-	public void runScriptFile(String scenarioName,String script){
+	public boolean runScriptFile(String scenarioName,String script){
 
 		ServerThread thread=new ServerThread(getConfigs().getRPath(),getConfigs().getRServePath());
 		threads.add(thread);
@@ -107,6 +128,7 @@ public class ParallelBatchRunOnServer extends BatchRunOnServer{
 		thread.getServer().setScenarioName(scenarioName);
 		info("Executing the script of Scenario "+scenarioName+" ...");
 		thread.start();
+		return true;
 
 		
 	

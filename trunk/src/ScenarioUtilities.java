@@ -9,6 +9,7 @@ import java.util.List;
 
 
 public class ScenarioUtilities {
+	public static String scenarioFileName="scenarios.txt";
 	public static List<List<String>> readScenarios(String path) {
 		// try{
 		Utilities.printInfo("Reading scenarios...");
@@ -16,13 +17,13 @@ public class ScenarioUtilities {
 		List<String> configs = null;
 		try {
 			configs = Files.readAllLines(Paths.get(path
-					+ File.separator + "scenarios.txt"));
+					+ File.separator + scenarioFileName));
 		} catch (IOException e) {
 			try {
 				Charset charset = Charset.forName("Cp1252");
 				configs = Files.readAllLines(
 						Paths.get(path + File.separator
-								+ "scenarios.txt"), charset);
+								+ scenarioFileName), charset);
 			} catch (IOException ie) {
 				e.printStackTrace();
 				Utilities.printErrorAndExit("Scenario file is missng or broken.");

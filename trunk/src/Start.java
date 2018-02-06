@@ -4,19 +4,29 @@ public class Start {
 
 	public static void main(String[] args) {
 
-		
+		printTitle();
 		if (args.length > 0) {
 			Utilities.killAllRserver();
+			Utilities.printInfo("All Rserve.exe processes are killed");
 			return;
 		}
-		printTitle();
-		parallelRunOnRserve();
+		
+		//parallelRunOnRserve();
 		//serialRunOnRserve();
 		//serialRunOnRJava();
+		splitParallelRunOnRserve();
 	}
 
 	private static void parallelRunOnRserve() {
 		AbstractBatchRun tool = new ParallelBatchRunOnServer();
+		tool.start();
+
+		tool.installLocalLibs();
+		tool.runScenarios();
+	}
+	
+	private static void splitParallelRunOnRserve() {
+		AbstractBatchRun tool = new SplitRun();
 		tool.start();
 
 		tool.installLocalLibs();

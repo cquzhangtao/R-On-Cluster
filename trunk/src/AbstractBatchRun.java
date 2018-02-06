@@ -160,7 +160,7 @@ public abstract class AbstractBatchRun extends BasicLogger {
 
 	public abstract REXPAdapter run(String loadScript);
 
-	public abstract void runScriptFile(String name, String file);
+	public abstract boolean runScriptFile(String name, String file);
 
 	// protected List<List<String>> readScenarios() {
 	// // try{

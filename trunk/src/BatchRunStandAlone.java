@@ -50,8 +50,9 @@ public class BatchRunStandAlone extends AbstractBatchRun {
 
 
 	@Override
-	public void runScriptFile(String name, String file) {
+	public boolean runScriptFile(String name, String file) {
 		run(file);
+		return true;
 		
 	}
 

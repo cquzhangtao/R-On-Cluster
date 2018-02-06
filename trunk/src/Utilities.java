@@ -1,6 +1,8 @@
 import java.io.IOException;
 import java.lang.reflect.Field;
 import java.net.ServerSocket;
+import java.text.DateFormat;
+import java.text.SimpleDateFormat;
 import java.util.Date;
 
 public class Utilities {
@@ -28,7 +30,7 @@ public class Utilities {
 	}
 	public static void printInfo(String... errors){
 		for(String error: errors){
-			System.out.println("INFO: "+error);
+			print("INFO: "+error);
 		}
 		try {
 			Thread.sleep(10);
@@ -39,14 +41,19 @@ public class Utilities {
 	
 	public static void printError(String... errors){
 		for(String error: errors){
-			System.out.println("ERROR: "+error);
+			print("ERROR: "+error);
 		}
 		try {
 			Thread.sleep(10);
 		} catch (InterruptedException e) {
 			//e.printStackTrace();
 		}
-	}	
+	}
+	
+	private static void print(String str){
+
+		System.out.println(DateFormat.getInstance().format(new Date())+"  "+str);
+	}
 	
 	public static void printErrorAndExit(String... errors){
 		printError(errors);

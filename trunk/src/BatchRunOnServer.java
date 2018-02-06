@@ -84,23 +84,27 @@ public class BatchRunOnServer extends AbstractBatchRun {
 	}
 
 	@Override
-	public void runScriptFile(String name, String loadScript) {
+	public boolean runScriptFile(String name, String loadScript) {
 		REXP result = null;
 		try {
 			result = connection.parseAndEval("try(eval(parse(text=" + loadScript + ")),silent=TRUE)");
 		} catch (REngineException | REXPMismatchException e) {
 
-			error("Script error in Scenario " + scenarioName + ".script.txt", loadScript);
+			errorNoExit("Script error in Scenario " + scenarioName + ".script.txt", loadScript);
+			return false;
 
 		}
-		if (result.inherits("try-error"))
+		if (result.inherits("try-error")){
 			try {
 				errorNoExit("Script error in Scenario " + scenarioName + ".script.txt", loadScript);
-				error(result.asString().split("\n"));
+				errorNoExit(result.asString().split("\n"));
 			} catch (REXPMismatchException e) {
 				// TODO Auto-generated catch block
 				// e.printStackTrace();
 			}
+			return false;
+		}
+		return true;
 		
 	}
 	
