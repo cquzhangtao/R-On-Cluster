@@ -427,9 +427,9 @@ public abstract class AbstractBatchRun extends BasicLogger {
 							info(str);
 							Process p = Runtime.getRuntime().exec(str);
 							StreamHog errorHog = new StreamHog(
-									p.getErrorStream(), false);
+									p.getErrorStream(), false,"");
 							StreamHog outputHog = new StreamHog(
-									p.getInputStream(), false);
+									p.getInputStream(), false,"");
 							p.waitFor();
 						} catch (IOException e) {
 							// TODO Auto-generated catch block

@@ -17,7 +17,7 @@ public class ParallelBatchRunOnServer extends BatchRunOnServer{
 		int port=Utilities.getAvailablePort();
 		this.setPort(port);
 		setConfigs(new Configuration(getAppPath()));
-		process=ServerThread.startServer(getConfigs().getRPath(),getConfigs().getRServePath(),port);
+		process=ServerThread.startServer(getConfigs().getRPath(),getConfigs().getRServePath(),port,"Main");
 	}
 	
 	
@@ -121,7 +121,7 @@ public class ParallelBatchRunOnServer extends BatchRunOnServer{
 	
 	public boolean runScriptFile(String scenarioName,String script){
 
-		ServerThread thread=new ServerThread(getConfigs().getRPath(),getConfigs().getRServePath());
+		ServerThread thread=new ServerThread(getConfigs().getRPath(),getConfigs().getRServePath(),scenarioName);
 		threads.add(thread);
 		//thread.setScenarioName(scenarioName);
 		thread.setScript(script);

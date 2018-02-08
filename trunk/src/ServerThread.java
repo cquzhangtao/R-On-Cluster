@@ -18,12 +18,12 @@ public class ServerThread extends Thread{
 		this.succeed = succeed;
 	}
 
-	public ServerThread(String rPath,String rServePath){
+	public ServerThread(String rPath,String rServePath,String name){
 		//port++;
 		int port;
 		port = Utilities.getAvailablePort();
 		//if(OSValidator.isWindows()){
-			setProcess(startServer(rPath,rServePath,port));
+			setProcess(startServer(rPath,rServePath,port,name));
 		//}
 		server=new BatchRunOnServer(port);
 		server.start();
@@ -59,7 +59,7 @@ public class ServerThread extends Thread{
 	public void close(){
 		server.close();	
 	}
-	public static Process startServer(String rPath,String rServePath,int port){
+	public static Process startServer(String rPath,String rServePath,int port,String name){
 //		BatchRunStandAlone run=new BatchRunStandAlone();
 //		run.start();
 //		run.run(".libPaths(\"C:/Users/shufang xie/Documents/R/win-library/3.4\")"+System.lineSeparator()+"library('Rserve')"+System.lineSeparator()+"Rserve(port="+ port+")");
@@ -72,7 +72,7 @@ public class ServerThread extends Thread{
 			cmd=rPath+"/R";
 		}
 		
-		return StartRserve.launchRserve(cmd,rServePath.replace("\\", "/"),port);
+		return StartRserve.launchRserve(cmd,rServePath.replace("\\", "/"),port,name);
 
 	}
 	public BatchRunOnServer getServer() {

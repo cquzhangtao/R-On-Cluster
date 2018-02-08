@@ -16,6 +16,10 @@ public class REXPAdapter {
 		exp2=exp;
 	}
 	
+	public boolean isNull(){
+		return exp1==null&&exp2==null;
+	}
+	
 	public boolean isBoolean(){
 		if(exp1!=null){
 			try {

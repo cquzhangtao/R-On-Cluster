@@ -26,7 +26,8 @@ public class BatchRunOnServer extends AbstractBatchRun {
 	public BatchRunOnServer() {
 		super();
 		setConfigs(new Configuration(getAppPath()));
-		ServerThread.startServer(getConfigs().getRPath(),getConfigs().getRServePath(),port);
+		port = Utilities.getAvailablePort();
+		ServerThread.startServer(getConfigs().getRPath(),getConfigs().getRServePath(),port,"Main");
 	}
 
 	@Override
@@ -36,10 +37,10 @@ public class BatchRunOnServer extends AbstractBatchRun {
 			try {
 				result = connection.eval(loadScript);
 			} catch (RserveException e) {
-				error("Script error:" + loadScript);
+				errorNoExit("Script error:" + loadScript);
 			}
 			if(result==null){
-				error("Script error:" + loadScript);
+				errorNoExit("Script error:" + loadScript);
 			}
 
 
