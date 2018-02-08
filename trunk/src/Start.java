@@ -27,11 +27,11 @@ public class Start {
 	}
 
 	private static void parallelRunOnRserve() {
-		AbstractBatchRun tool = new ParallelBatchRunOnServer();
+		ParallelBatchRunOnServer tool = new ParallelBatchRunOnServer();
 		tool.start();
 
 		tool.installLocalLibs();
-		tool.runScenarios();
+		tool.runScenariosNewNew();
 	}
 	
 	private static void singleScriptFileRun(String file){
@@ -71,11 +71,11 @@ public class Start {
 	}
 	
 	private static void splitParallelRunOnRserve() {
-		AbstractBatchRun tool = new SplitRun();
+		SplitRun tool = new SplitRun();
 		tool.start();
 
 		tool.installLocalLibs();
-		tool.runScenarios();
+		tool.runScenariosNewNew();
 	}
 
 	private static void serialRunOnRserve() {

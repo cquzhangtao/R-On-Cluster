@@ -88,6 +88,45 @@ public abstract class AbstractBatchRun extends BasicLogger {
 	public void onScenariosStart() {
 
 	}
+	
+
+
+//	
+//	public void runScenariosNew(){
+//		info();
+//		info("Starting to run scenarios");
+//		List<List<String>> scenarios = ScenarioUtilities.readScenarios(configs
+//				.getWorkingPath());
+//		runScenariosNew(scenarios);
+//	}
+//	public void runScenariosNew(List<List<String>> scenarios) {
+//		
+//		if(counter>=scenarios.size()){
+//			info();
+//			info("Batch execution is done!");
+//			close();
+//			Utilities.exit();
+//			return;
+//		}
+//
+//
+//		for (int i = counter; i < Math.min(scenarios.size(), counter+maxProcessNum); i++) {
+//			List<String> scenario = scenarios.get(i);
+//			if (isScenarioDisable(scenarios.get(0), scenario)) {
+//				continue;
+//			}
+//			// String scenarioName = getScenarioName(scenarios.get(0),
+//			// scenario);
+//			// String scriptPath = getAppPath() + File.separator + scenarioName
+//			// + ".script.txt";
+//			runScenario(scenario, scenarios.get(0), configs.getWorkingPath());
+//
+//		}
+//		counter+=maxProcessNum;
+//		onScenariosStart();
+//		runScenariosNew(scenarios);
+//
+//	}
 
 	public void runScenarios() {
 
@@ -148,9 +187,18 @@ public abstract class AbstractBatchRun extends BasicLogger {
 
 	public void runScenario(List<String> scenario, List<String> header,
 			String workingPath) {
-		info();
-		String script = generateScriptForScenario(header, scenario, workingPath);
 		String scenarioName = getScenarioName(header, scenario);
+		info();
+
+		info("////////////////////////////////////////////////////////",
+				"////////////////////////////////////////////////////////",
+				"//////////     Scenario "+ scenarioName+" is started!",
+				"////////////////////////////////////////////////////////",
+				"////////////////////////////////////////////////////////");
+
+		String script = generateScriptForScenario(header, scenario, workingPath);
+		
+		
 		info("Executing the script of Scenario " + scenarioName + " ...");
 		String loadScript = "source('" + script + "')";
 		loadScript = loadScript.replace("\\", "/");

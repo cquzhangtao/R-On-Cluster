@@ -30,7 +30,7 @@ public class Utilities {
 	}
 	public static void printInfo(String... errors){
 		for(String error: errors){
-			print("INFO: "+error);
+			print(" INFO: "+error);
 		}
 		try {
 			Thread.sleep(10);

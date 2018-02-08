@@ -37,12 +37,12 @@ class StreamHog extends Thread {
 						}
 					} else 
 					{
-						Utilities.printInfo(name+", " + line);
+						Utilities.printInfo("R Message>> "+name+"> " + line);
 					}
 				//}
 			}
 		} catch (IOException e) {
-			e.printStackTrace();
+			//e.printStackTrace();
 		}
 	}
 }
@@ -77,6 +77,8 @@ public class StartRserve {
 					      "echo '.libPaths(\""+rServePath+"\");library(Rserve);Rserve("+(debug?"TRUE":"FALSE")+",port="+port+",args=\""+rsrvargs+"\")'|"+cmd+" "+rargs
 					      };
 				//Utilities.printInfo(com);
+				//String command=cmd+" CMD "+rServePath+"/Rserve/libs/Rserve --no-save --RS-port "+port;
+				//command=cmd+" CMD "+rServePath+"/Rserve/libs/Rserve --no-save";
 				p = Runtime.getRuntime().exec(com);
 			}
 //			p = Runtime.getRuntime().exec(new String[] {
@@ -85,18 +87,17 @@ public class StartRserve {
 //				      });
 			Utilities.printInfo("waiting for Rserve to start ... ("+p+")");
 			// we need to fetch the output - some platforms will die if you don't ...
+			for(int i=0;i<20;i++){
 			StreamHog errorHog = new StreamHog(p.getErrorStream(), false,name);
 			StreamHog outputHog = new StreamHog(p.getInputStream(), false,name);
-			StreamHog errorHog2 = new StreamHog(p.getErrorStream(), false,name);
-			StreamHog outputHog2 = new StreamHog(p.getInputStream(), false,name);
-			StreamHog errorHog3 = new StreamHog(p.getErrorStream(), false,name);
-			StreamHog outputHog3 = new StreamHog(p.getInputStream(), false,name);
+			
+			}
 			//StreamHog msgHog = new StreamHog(p.getOutputStream()., false);
 			if (!isWindows) /* on Windows the process will never return, so we cannot wait */
 				p.waitFor();
 			//Utilities.printInfo("call terminated, let us try to connect ...");
 		} catch (Exception x) {
-			Utilities.printError("failed to start Rserve process with "+x.getMessage());
+			Utilities.printError("failed to start Rserve process, try again now ...");
 			return null;
 		}
 		return p;

@@ -32,6 +32,9 @@ public class BatchRunOnServer extends AbstractBatchRun {
 
 	@Override
 	public REXPAdapter run(String loadScript) {
+		if(connection==null){
+			return null;
+		}
 		REXP result = null;
 
 			try {
@@ -65,27 +68,56 @@ public class BatchRunOnServer extends AbstractBatchRun {
 
 	@Override
 	public void connect() {
-
-		try {
-			//if (OSValidator.isWindows()) {
-				info("Connectting to Rserve server at port " + port + "...");
-				connection = new RConnection("localhost", port);
-			//} else {
-			//	info("Connectting to Rserve server...");
-			//	connection = new RConnection();
-			//}
-		} catch (RserveException e) {
-			// e.printStackTrace();
-			error("Rserve server is not started. Please install the server if necessary and start it in your R console and run this again."
-					+ "-- install.packages(\"Rserve\")-> library(Rserve)-> Rserve();");
-
+//
+//		try {
+//			//if (OSValidator.isWindows()) {
+//				info("Connectting to Rserve server at port " + port + "...");
+//				connection = new RConnection("localhost", port);
+//			//} else {
+//			//	info("Connectting to Rserve server...");
+//			//	connection = new RConnection();
+//			//}
+//		} catch (RserveException e) {
+//			// e.printStackTrace();
+//			error("Rserve server is not started. Please install the server if necessary and start it in your R console and run this again."
+//					+ "-- install.packages(\"Rserve\")-> library(Rserve)-> Rserve();");
+//
+//		}
+		
+		
+		
+		int attempts = 15; /* try up to 5 times before giving up. We can be conservative here, because at this point the process execution itself was successful and the start up is usually asynchronous */
+		while (attempts > 0) {
+			try {
+				//if (OSValidator.isWindows()) {
+					info("Connectting to Rserve server at port " + port + "...");
+					connection = new RConnection("localhost", port);
+				//}else{
+				//	info("Connectting to Rserve server...");
+					//connection = new RConnection();
+				//}
+				info("Connected");
+				return;
+			} catch (Exception e2) {
+				//e2.printStackTrace();
+				info("failed to connect to Rserve, try again now...");
+			}
+			/* a safety sleep just in case the start up is delayed or asynchronous */
+			try { Thread.sleep(500); } catch (InterruptedException ix) { };
+			attempts--;
 		}
-		info("Connected");
+		errorNoExit("Cannot connect to the Rserve");
 
 	}
+	
+	
+
 
 	@Override
 	public boolean runScriptFile(String name, String loadScript) {
+		if(connection==null){
+			return false;
+		}
 		REXP result = null;
 		try {
 			result = connection.parseAndEval("try(eval(parse(text=" + loadScript + ")),silent=TRUE)");
@@ -98,7 +130,11 @@ public class BatchRunOnServer extends AbstractBatchRun {
 		if (result.inherits("try-error")){
 			try {
 				errorNoExit("Script error in Scenario " + scenarioName + ".script.txt", loadScript);
+				
 				errorNoExit(result.asString().split("\n"));
+				if(result.asString().contains("ignoring SIGPIPE signal")){
+					System.exit(1);
+				}
 			} catch (REXPMismatchException e) {
 				// TODO Auto-generated catch block
 				// e.printStackTrace();

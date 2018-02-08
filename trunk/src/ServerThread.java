@@ -8,6 +8,7 @@ public class ServerThread extends Thread{
 	private BatchRunOnServer server;
 	private Process process=null;
 	private boolean succeed=false;
+	private ParallelBatchRunOnServer mainServer;
 	
 
 	public boolean isSucceed() {
@@ -18,13 +19,14 @@ public class ServerThread extends Thread{
 		this.succeed = succeed;
 	}
 
-	public ServerThread(String rPath,String rServePath,String name){
+	public ServerThread(String rPath,String rServePath,String name,ParallelBatchRunOnServer mainServer){
 		//port++;
 		int port;
 		port = Utilities.getAvailablePort();
 		//if(OSValidator.isWindows()){
 			setProcess(startServer(rPath,rServePath,port,name));
 		//}
+		this.mainServer=mainServer;
 		server=new BatchRunOnServer(port);
 		server.start();
 	}
@@ -42,17 +44,32 @@ public class ServerThread extends Thread{
 		
 		if(succeed){
 
-			Utilities.printInfo("*******************************************","Scenario "+ server.getScenarioName()+" is executed!","*******************************************");
+			Utilities.printInfo("***************************************************************",
+					"***************************************************************",
+					"**********      Scenario "+ server.getScenarioName()+" is done!",
+					"***************************************************************",
+					"***************************************************************");
+		}else{
+			Utilities.printInfo("!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!",
+					"!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!",
+					"!!!!!!!!!!      Scenario "+ server.getScenarioName()+" failed",
+					"!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!",
+					"!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!");
 		}
+		server.close();
 		if(process!=null){
 			//process.destroyForcibly();
 			//System.out.println(process.getClass().getName());
-			server.close();
-			//process.destroy();
+			
+			process.destroy();
 	
 			//Utilities.killProcess(process);
 			//Utilities.printInfo("Process for "+server.getScenarioName()+" is killed.");
 		}
+		
+		mainServer.onOneScenarioDoneForLimitedBatchSize();
+		
+	
 		
 		
 	}
@@ -72,7 +89,17 @@ public class ServerThread extends Thread{
 			cmd=rPath+"/R";
 		}
 		
-		return StartRserve.launchRserve(cmd,rServePath.replace("\\", "/"),port,name);
+		int repeat=0;
+		Process process=null;
+		while(repeat<50){
+			process=StartRserve.launchRserve(cmd,rServePath.replace("\\", "/"),port,name);
+			if(process!=null){
+				break;
+			}
+			repeat++;
+		}
+		
+		return process;
 
 	}
 	public BatchRunOnServer getServer() {
