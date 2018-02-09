@@ -100,5 +100,33 @@ public class Start {
 		System.out.println("R Experiment Tool @Unibw Munich 11-09-2017");
 		System.out.println();
 	}
+	
+
+
+//library(rnn)
+//
+//## Not run:
+//# create training numbers
+//X1 = sample(0:127, 700, replace=TRUE)
+//X2 = sample(0:127, 700, replace=TRUE)
+//# create training response numbers
+//Y <- X1 + X2
+//# convert to binary
+//X1 <- int2bin(X1, length=8)
+//X2 <- int2bin(X2, length=8)
+//Y  <- int2bin(Y,  length=8)
+//# create 3d array: dim 1: samples; dim 2: time; dim 3: variables
+//X <- array( c(X1,X2), dim=c(dim(X1),2) )
+//# train the model
+//model <- trainr(Y=Y[,dim(Y)[2]:1],
+//X=X[,dim(X)[2]:1,],
+//learningrate   =  0.1,
+//hidden_dim     = 1,numepochs = 30
+//)
+//
+//sink("[[ScenarioPath]]/ok.txt")
+//cat("bbb")
+//sink()
+
 
 }

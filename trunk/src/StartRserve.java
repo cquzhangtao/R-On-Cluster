@@ -67,6 +67,7 @@ public class StartRserve {
 			
 			boolean isWindows = false;
 			String osname = System.getProperty("os.name");
+			Utilities.printInfo("Starting Rserve at port "+port+" ...");
 			
 			if (osname != null && osname.length() >= 7 && osname.substring(0,7).equals("Windows")) {
 				isWindows = true; /* Windows startup */
@@ -77,9 +78,9 @@ public class StartRserve {
 					      "echo '.libPaths(\""+rServePath+"\");library(Rserve);Rserve("+(debug?"TRUE":"FALSE")+",port="+port+",args=\""+rsrvargs+"\")'|"+cmd+" "+rargs
 					      };
 				//Utilities.printInfo(com);
-				//String command=cmd+" CMD "+rServePath+"/Rserve/libs/Rserve --no-save --RS-port "+port;
+				String command=cmd+" CMD "+rServePath+"/Rserve/libs/Rserve --no-save --slave --RS-port "+port;
 				//command=cmd+" CMD "+rServePath+"/Rserve/libs/Rserve --no-save";
-				p = Runtime.getRuntime().exec(com);
+				p = Runtime.getRuntime().exec(command);
 			}
 //			p = Runtime.getRuntime().exec(new String[] {
 //				      "/bin/sh", "-c",
@@ -87,15 +88,17 @@ public class StartRserve {
 //				      });
 			Utilities.printInfo("waiting for Rserve to start ... ("+p+")");
 			// we need to fetch the output - some platforms will die if you don't ...
-			for(int i=0;i<20;i++){
+			for(int i=0;i<1;i++){
 			StreamHog errorHog = new StreamHog(p.getErrorStream(), false,name);
 			StreamHog outputHog = new StreamHog(p.getInputStream(), false,name);
 			
 			}
+			
 			//StreamHog msgHog = new StreamHog(p.getOutputStream()., false);
 			if (!isWindows) /* on Windows the process will never return, so we cannot wait */
 				p.waitFor();
 			//Utilities.printInfo("call terminated, let us try to connect ...");
+			Utilities.printInfo("Rserve started at port "+port);
 		} catch (Exception x) {
 			Utilities.printError("failed to start Rserve process, try again now ...");
 			return null;

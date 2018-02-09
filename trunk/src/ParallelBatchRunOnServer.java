@@ -136,6 +136,12 @@ public class ParallelBatchRunOnServer extends BatchRunOnServer {
 		thread.setScript(script);
 		thread.getServer().setScenarioName(scenarioName);
 		info("Executing the script of Scenario " + scenarioName + " ...");
+//		try {
+//			Thread.sleep(500);
+//		} catch (InterruptedException e) {
+//			// TODO Auto-generated catch block
+//			e.printStackTrace();
+//		}
 		thread.start();
 		return true;
 

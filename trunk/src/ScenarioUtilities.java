@@ -25,7 +25,7 @@ public class ScenarioUtilities {
 						Paths.get(path + File.separator
 								+ scenarioFileName), charset);
 			} catch (IOException ie) {
-				e.printStackTrace();
+				//e.printStackTrace();
 				Utilities.printErrorAndExit("Scenario file is missng or broken.");
 
 			}

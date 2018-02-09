@@ -360,7 +360,7 @@ public abstract class AbstractBatchRun extends BasicLogger {
 			template = template.replaceAll(regex, scenarioPath);
 
 			template = ".libPaths(\"" + installedLibFolder + "\")"
-					+ System.lineSeparator() + template;
+					+ System.lineSeparator() + "sink('"+scenarioPath+"/log.txt')"+ System.lineSeparator() +template+ System.lineSeparator() +"sink()";
 
 			new File(scriptPath).delete();
 			PrintWriter out = null;

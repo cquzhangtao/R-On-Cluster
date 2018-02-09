@@ -113,34 +113,54 @@ public class BatchRunOnServer extends AbstractBatchRun {
 	
 
 
-	@Override
+//	@Override
+//	public boolean runScriptFile(String name, String loadScript) {
+//		if(connection==null){
+//			return false;
+//		}
+//		REXP result = null;
+//		try {
+//			result = connection.parseAndEval("try(eval(parse(text=" + loadScript + ")),silent=TRUE)");
+//		} catch (REngineException | REXPMismatchException e) {
+//
+//			errorNoExit("Script error in Scenario " + scenarioName + ".script.txt", loadScript);
+//			return false;
+//
+//		}
+//		if (result.inherits("try-error")){
+//			try {
+//				errorNoExit("Script error in Scenario " + scenarioName + ".script.txt", loadScript);
+//				
+//				errorNoExit(result.asString().split("\n"));
+//				if(result.asString().contains("ignoring SIGPIPE signal")){
+//					System.exit(1);
+//				}
+//			} catch (REXPMismatchException e) {
+//				// TODO Auto-generated catch block
+//				// e.printStackTrace();
+//			}
+//			return false;
+//		}
+//		return true;
+//		
+//	}
+//	
 	public boolean runScriptFile(String name, String loadScript) {
 		if(connection==null){
 			return false;
 		}
 		REXP result = null;
 		try {
-			result = connection.parseAndEval("try(eval(parse(text=" + loadScript + ")),silent=TRUE)");
-		} catch (REngineException | REXPMismatchException e) {
+			//String nloadScript="invisible(capture.output("+loadScript+"))";
+			String nloadScript="suppressMessages("+loadScript+")";
+			result = connection.eval(nloadScript );
+		} catch (REngineException e) {
 
 			errorNoExit("Script error in Scenario " + scenarioName + ".script.txt", loadScript);
 			return false;
 
 		}
-		if (result.inherits("try-error")){
-			try {
-				errorNoExit("Script error in Scenario " + scenarioName + ".script.txt", loadScript);
-				
-				errorNoExit(result.asString().split("\n"));
-				if(result.asString().contains("ignoring SIGPIPE signal")){
-					System.exit(1);
-				}
-			} catch (REXPMismatchException e) {
-				// TODO Auto-generated catch block
-				// e.printStackTrace();
-			}
-			return false;
-		}
+		
 		return true;
 		
 	}

@@ -111,7 +111,7 @@ public class ScenarioSplitter {
 			String workingPath) {
 
 		Set<String> stations = null;
-		int inputIdx = 0;
+		int inputIdx = -1;
 		String file = "";
 		String name="";
 		for (int i = 0; i < header.size(); i++) {
@@ -140,6 +140,7 @@ public class ScenarioSplitter {
 				name=values.get(i);
 			}
 		}
+		
 
 		String str = "";
 		List<String> newScenarios = new ArrayList<String>();
@@ -158,6 +159,10 @@ public class ScenarioSplitter {
 			// }
 
 		}
+		if(inputIdx==-1){
+
+			newScenarios.add(str + file+"\t"+name);
+		}else{
 		
 		String path=file.substring(0,file.lastIndexOf(File.separator))+File.separator+"splitteddataset";
 		
@@ -168,6 +173,7 @@ public class ScenarioSplitter {
 		}
 		
 		Utilities.printInfo(newScenarios.size()+" dispatching stations found in Scenario "+name);
+		}
 
 		return newScenarios;
 

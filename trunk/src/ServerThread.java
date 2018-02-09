@@ -1,5 +1,7 @@
 import java.io.IOException;
 import java.net.ServerSocket;
+import java.util.ArrayList;
+import java.util.List;
 
 
 public class ServerThread extends Thread{
@@ -18,11 +20,17 @@ public class ServerThread extends Thread{
 	public void setSucceed(boolean succeed) {
 		this.succeed = succeed;
 	}
+	
+	private static List<Integer> usedPorts=new ArrayList<Integer>();
 
 	public ServerThread(String rPath,String rServePath,String name,ParallelBatchRunOnServer mainServer){
 		//port++;
 		int port;
 		port = Utilities.getAvailablePort();
+		while(usedPorts.contains(port)){
+			port= Utilities.getAvailablePort();
+		}
+		usedPorts.add(port);
 		//if(OSValidator.isWindows()){
 			setProcess(startServer(rPath,rServePath,port,name));
 		//}
