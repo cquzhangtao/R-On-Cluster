@@ -1,66 +1,50 @@
-//New instruction 
+# Introduction
+How to train a model with different datasets and parameters in parallel on a cluster? This project gives a very simple solution. Write your script first and replace the parameters that appeared in the script  with [[name of a parameter]]. The script turns into a template. Then, write all the possible scenarios with the value of parameters into a scenario file. Pass the template and the scenario files to the tool, all the scenarios with be executed in parallel on the cluster.
 
-
-1) make sure java, R, and Rserve are installed and up to date.
-
-
+# New instruction 
+1) make sure Java, R, and Rserve are installed and up to date
 2) copy the tool folder on your machine.
-
 The folder has the following contents,
 
 ----lib                 //please put all required libraries in this folder
-
 ----installed_lib       // The libraries in the lib folder will be installed under this folder
-
-----tool.jar            // This is an runnable jar file. All codes are inside.
-
-----tool_lib            // This includes the R related jar files needed by the tool
-
-----run.bat             // on windows click this file to run the tool
-
+----tool.jar            // This is a runnable jar file. All codes are inside.
+----tool_lib            // This includes the R-related jar files needed by the tool
+----run.bat             // on Windows click this file to run the tool
 ----config.txt          // the config file
-
-----test                // this folder contains a simple scenario file and a simple template file, which can be used to test the installation.
+----test                //This folder contains a simple scenario file and a simple template file, which can be used to test the installation.
 
 3) modify the config file
-
 please set installation paths of R and Rserve, and the user working path.
 
-
 4) create the scenario file
-
-In the scenario file, please add names of all parameters in the first line and separate with a tab. 
+In the scenario file, please add the names of all parameters in the first line and separate them with a tab. 
 Please also add the following headers: Include, Name, and Template. 
 The column "Template" refers to the locations of templates used by the scenarios. 
 
-If the column Include is set to "y" or "Y" , the scenario will be included. For other letters, not included. Please do not use white space here.
+If the column Include is set to "y" or "Y", the scenario will be included. For other letters, not included. Please do not use white space here.
 
 Please add new lines to define scenarios. The values are also separated with a tab. Empty lines are allowed.
 
 !!!!The name of the scenario file is fixed to "scenarios.txt" and please put it under the user working folder.
-!!!!Please keep the names of parameters in the template file and the scenarios.txt file the same.The names of parameters are case insensitive. The order of the headers does not matter. 
+!!!!Please keep the names of parameters in the template file and the scenarios.txt file the same. The names of parameters are case insensitive. The order of the headers does not matter. 
 
 
-!!NEW!! "ScenarioPath" is a build-in parameter. You do not need to define it. It refers to the location: User_working_path/Scenario_Name/.
+!!NEW!! "ScenarioPath" is a built-in parameter. You do not need to define it. It refers to the location: User_working_path/Scenario_Name/.
 !!NEW!! Column "Template" is optional. If you do not add this column, All scenarios will use the template.txt under the user working folder.
 !!NEW!! If the parameter name starts with *, we will consider the values as file paths. The corresponding files will be copied to the scenario folders: 
-!!NEW!! If the input data files do not exist, the file path will be considered to the relative path starting from the user working path
+!!NEW!! If the input data files do not exist, the file path will be considered to be the relative path starting from the user's working path
 !!NEW!! The generated scripts will be also put in the scenario folders.
-
-
 
 !!ATTENTION!!
 !!PUT scenarios.txt IN THE USER WORKING FOLDER.
 
 5) create the template file
 
-please use "[[name of a parameter]]" to replace the values you want to config later. There is no requirement on the names of parameters.
-If all scenarios use the same template, you can put the template under the user working folder without specifying in the scenario file.
+please use "[[name of a parameter]]" to replace the values you want to configure later. There is no requirement for the names of parameters.
+If all scenarios use the same template, you can put the template under the user working folder without specifying it in the scenario file.
 
 !!ATTENTION!! For the names starting with "*" in the scenario file, please do not write "*" in the templates.
-
-
-
 
 6) 	test the installation
 
@@ -72,18 +56,12 @@ $ java -jar tool.jar
 
 c. if everything goes well, in the test folder, 5 scenario folders will be created and each one contains a script file, a data file, and a result file.
 
-
-
-
-
-
-
 /////////////////////////////////////////////////////////////////////////////////////////////////
 // old instruction
 
 A. Installation 
 
-In windows, please follow steps below to setup this tool.
+In Windows, please follow the steps below to set up this tool.
 
 1) Install Java if not installed yet
 
@@ -92,16 +70,16 @@ In windows, please follow steps below to setup this tool.
 3) Install rJava in R 
 install.packages("rJava")
 
-4) Change the paths of Java, R and rJava in run.bat
+4) Change the paths of Java, R, and rJava in run.bat
 
 5) Click run.bat to run the tool.
 
 
-In Debian, please follow steps below to setup this tool .
+In Debian, please follow the steps below to set up this tool.
 
 1) Install Java Development Toolkit (JDK) if not installed yet
 
-$apt-get install default-jdk
+$apt-get install default-JDK
 
 2) Install R if not installed 
 
@@ -137,25 +115,25 @@ $ java -jar /some/where/you/copy/to/OsramRClient.jar
 
 8) Done
 
-9) If you changed the configuration and want to run again, please just input command,
+9) If you changed the configuration and want to run it again, please just input the command,
 
 $ java -jar /some/where/you/copy/to/OsramRClient.jar
 
 
 B. Configuration
 
-Two files are required, Template file and scenario file.
-In the template file, please use "[[name of a parameter]]" to replace the values you want to config later. There is no requirement on the name and location of template files.
-In the scenario file, please add names of all parameters to the first line and separate with a tab. Please also add the following headers, Include, Name, and Template. Column "Template" refers to the location of the templates.
+Two files are required, a Template file and a scenario file.
+In the template file, please use "[[name of a parameter]]" to replace the values you want to configure later. There is no requirement for the name and location of template files.
+In the scenario file, please add the names of all parameters to the first line and separate them with a tab. Please also add the following headers, Include, Name, and Template. Column "Template" refers to the location of the templates.
 Please add new lines to define scenarios. The values are also separated with a tab. Empty lines are allowed.
 
 !!!!The name of the scenario file is fixed to "scenarios.txt" and please put it under the tool folder.
-!!!!Please keep the names of parameters in the template file and the scenarios.txt file the same.The names of parameters are case insensitive. The order of the headers does not matter. 
+!!!!Please keep the names of parameters in the template file and the scenarios.txt file the same. The names of parameters are case insensitive. The order of the headers does not matter. 
 
 C. Library
 
 If you want to use other libraries, please download them and put them into the lib folder in the tool.
-For windows, download zip file; For Linux, download .tar.gz file.
+For Windows, download the zip file; For Linux, download the .tar.gz file.
 
 D. Rserve installation
 
@@ -165,7 +143,7 @@ Manually installation
 //if this error occurs "'configure' exists but is not executable -- see the 'R Installation and Administration Manual'"
 // please run $mkdir new_folder $export TMPDIR= path_of_new_folder first
 
-Run Rserve in an user path
+Run Rserve in a user path
 1) .libPaths("Rserve_installed_path")
 2) library("Rserve")
 3) Rserve()
