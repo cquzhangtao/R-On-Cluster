@@ -4,15 +4,15 @@ How to train a model with different datasets and parameters in parallel on a clu
 # New instruction 
 1) make sure Java, R, and Rserve are installed and up to date
 2) copy the tool folder on your machine.
-The folder has the following contents,
+The folder has the following contents, <br/>
 
-----lib                 //please put all required libraries in this folder
-----installed_lib       // The libraries in the lib folder will be installed under this folder
-----tool.jar            // This is a runnable jar file. All codes are inside.
-----tool_lib            // This includes the R-related jar files needed by the tool
-----run.bat             // on Windows click this file to run the tool
-----config.txt          // the config file
-----test                //This folder contains a simple scenario file and a simple template file, which can be used to test the installation.
+----lib                 //please put all required libraries in this folder  <br/>
+----installed_lib       // The libraries in the lib folder will be installed under this folder  <br/>
+----tool.jar            // This is a runnable jar file. All codes are inside.  <br/>
+----tool_lib            // This includes the R-related jar files needed by the tool  <br/>
+----run.bat             // on Windows click this file to run the tool  <br/>
+----config.txt          // the config file  <br/>
+----test                //This folder contains a simple scenario file and a simple template file, which can be used to test the installation.  <br/>
 
 3) modify the config file
 please set installation paths of R and Rserve, and the user working path.
@@ -56,8 +56,8 @@ $ java -jar tool.jar
 
 c. if everything goes well, in the test folder, 5 scenario folders will be created and each one contains a script file, a data file, and a result file.
 
-/////////////////////////////////////////////////////////////////////////////////////////////////
-// old instruction
+
+#  Old Instruction
 
 A. Installation 
 
